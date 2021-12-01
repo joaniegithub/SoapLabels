@@ -1,0 +1,8 @@
+
+.gridPrintLabels {
+	padding: 30px 20px;
+	border: solid 1px #000;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+}

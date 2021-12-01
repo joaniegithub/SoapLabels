@@ -1,0 +1,39 @@
+.modalBox {
+	position: absolute;
+	top: 30px;
+	bottom: 30px;
+	left: 50%;
+	transform: translate(-420px, 0);
+	background-color: #fff;
+	border: 1px solid #000;
+	border-radius: 30px;
+	width: 839px !important;
+	padding: 24px;
+}
+.title {
+	margin: 0;
+}
+.gridResult {
+	padding: 30px 20px;
+	border: solid 1px #000;
+	display: flex;
+	justify-content: center;
+}
+
+.gridItemClose {
+	display: flex;
+	justify-content: flex-end;
+}
+.gridItemButtons {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+}
+
+.button {
+	margin-left: 10px !important;
+}
+.tfRecipeCode {
+	width: 100%;
+}

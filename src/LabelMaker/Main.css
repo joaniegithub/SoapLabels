@@ -1,0 +1,154 @@
+.main {
+	background-repeat: repeat;
+}
+.main_arab_tile {
+	background-image: url('assets/backgrounds/arab_tile.png');
+}
+.main_bush {
+	background-image: url('assets/backgrounds/bush.png');
+}
+.main_circuit {
+	background-image: url('assets/backgrounds/circuit.png');
+}
+.main_full-bloom {
+	background-image: url('assets/backgrounds/full-bloom.png');
+}
+.main_gplaypattern {
+	background-image: url('assets/backgrounds/gplaypattern.png');
+}
+.main_greek-vase {
+	background-image: url('assets/backgrounds/greek-vase.png');
+}
+.main_herringbone {
+	background-image: url('assets/backgrounds/herringbone.png');
+}
+.main_hotel-wallpaper {
+	background-image: url('assets/backgrounds/hotel-wallpaper.png');
+}
+.main_more-leaves {
+	background-image: url('assets/backgrounds/more-leaves.png');
+}
+.main_moroccan-flower {
+	background-image: url('assets/backgrounds/moroccan-flower.png');
+}
+.main_moroccan-flower-dark {
+	background-image: url('assets/backgrounds/moroccan-flower-dark.png');
+}
+.main_morocco-blue {
+	background-image: url('assets/backgrounds/morocco-blue.png');
+}
+.main_new_year_background {
+	background-image: url('assets/backgrounds/new_year_background.png');
+}
+.main_regal {
+	background-image: url('assets/backgrounds/regal.png');
+}
+.main_ripples {
+	background-image: url('assets/backgrounds/ripples.png');
+}
+.main_swirls {
+	background-image: url('assets/backgrounds/swirls.png');
+}
+.main_tree_bark {
+	background-image: url('assets/backgrounds/tree_bark.png');
+}
+.main_trees {
+	background-image: url('assets/backgrounds/trees.png');
+}
+
+.header {
+	width: 838px !important;
+	padding: 30px 0 15px 0 !important;
+	position: relative;
+}
+.mainTitle {
+	font-family: "Shadows Into Light";
+	font-size: 24px;
+	line-height: 40px;
+	margin: 0;
+}
+.bgSwitcherContainer {
+	padding: 30px 0 15px 0;
+	display: flex;
+}
+.secondTitle {
+	font-family: "Shadows Into Light";
+	font-size: 18px;
+	line-height: 40px;
+	font-weight: bold;
+}
+.footer {
+	width: 838px !important;
+	padding: 10px 0 20px 0 !important;
+}
+.footerCopyright {
+	font-family: "Montserrat";
+	font-size: 12px;
+	font-weight: bold;
+	text-align: right;
+}
+
+.container {
+	width: 838px !important;
+	background-color: #fff;
+	border-radius: 30px;
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.box {
+	padding: 30px 0;
+}
+
+.gridSettings {
+	margin-bottom: 30px !important;
+}
+.soapLabelRow {
+	padding: 0px 5px;
+	background-color: #fafafa;
+	margin: 5px 0 !important;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+.soapLabelRowName {
+	font-family: "Shadows Into Light";
+	font-size: 18px;
+	line-height: 40px;
+	margin: 0 0 0 10px;
+}
+.soapLabelButtons {
+	display: flex;
+	justify-content: flex-end;
+	margin-left: 10px;
+}
+.soapLabelRowQty {
+	height: 24px !important;
+	width: 80px;
+	margin-right: 10px !important;
+}
+.soapLabelRowButtons {
+	padding: 10px 0 5px;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+}
+
+
+.gridPrintLabels {
+	padding: 30px 20px;
+	border: solid 1px #000;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+}
+
+
+.wrapperForAbsolute {
+	position: relative;
+}
+.rightAbsoluteContainer {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
