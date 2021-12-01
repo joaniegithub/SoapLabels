@@ -7,24 +7,40 @@ export default function LabelMaker(props) {
 
 	let index = 0;
 
-	return (
-		<Grid container className="gridPrintLabels">
-			{props.soapLabels.map(soapLabel => {
-				let labels = [];
-				for (let i=0; i<soapLabel.quantity; i++){
-					labels.push(
+	const renderedLabels = (soapLabels) => {
+		let labels = [];
+		soapLabels.forEach(soapLabel => {
+			for (let i=0; i<soapLabel.quantity; i++){
+				labels.push(soapLabel);
+				index++
+			}
+		})
+		const rows = labels.reduceRight((r,i,_,s) => (
+			r.push(s.splice(0,3)),r
+		),[])
+
+		return rows.map((row, r) => {
+			return (
+			<div className="gridPrintRow">
+				{row.map((label, l) => {
+					return (
 						<Label
-							key={`labelPreview-${index}`}
+							key={`labelPreview-${r*3+l}`}
 							size={4} 
-							soapName={soapLabel.name} 
-							ingredients={soapLabel.ingredients} 
-							brand={soapLabel.brand}
-						/>
+							soapName={label.name} 
+							ingredients={label.ingredients} 
+							brand={label.brand}
+					/>
 					);
-					index++
-				}
-				return labels;
-			})}
-		</Grid>
+				})}
+			</div>
+			);
+		});
+	};
+
+	return (
+		<div className="gridPrintLabels">
+			{props.soapLabels && props.soapLabels.length ? renderedLabels(props.soapLabels) : null}
+		</div>
 	);
 }

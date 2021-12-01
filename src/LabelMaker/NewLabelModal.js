@@ -147,6 +147,7 @@ export default function NewSoapModal(props) {
 								required
 								id="soap-name"
 								label="Soap Name"
+								size="small"
 								helperText=""
 								value={soapName}
 								error={soapNameError}
@@ -159,6 +160,7 @@ export default function NewSoapModal(props) {
 								required
 								id="soap-code"
 								label="Soap Recipe Code"
+								size="small"
 								className="tfRecipeCode"
 								multiline
 								rows={8}
@@ -171,6 +173,7 @@ export default function NewSoapModal(props) {
 							<TextField
 								id="soap-fragrances"
 								label="Soap Fragrance(s)"
+								size="small"
 								value={soapFragrances}
 								disabled={useSoapIngredients}
 								onChange={handleSoapFragrancesChange}
@@ -181,6 +184,7 @@ export default function NewSoapModal(props) {
 							<TextField
 								id="soap-colorants"
 								label="Soap Colorant(s)"
+								size="small"
 								value={soapColorants}
 								disabled={useSoapIngredients}
 								onChange={handleSoapColorantsChange}
@@ -200,9 +204,9 @@ export default function NewSoapModal(props) {
 				</FormControl>
 				
 				<h2 className="secondTitle">Label Preview</h2>
-				<Grid container className="gridResult">
+				<div className="gridResult">
 					<Label size={4} soapName={soapName} ingredients={ingredientsCodeOutput} brand={soapBrand}/>
-				</Grid>
+				</div>
 			</Box>
 		</Modal>
 	);

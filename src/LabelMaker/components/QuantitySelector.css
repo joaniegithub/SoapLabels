@@ -1,0 +1,11 @@
+.wrapperQuantity {
+	display: flex;
+	align-content: center;
+	align-items: center;
+	margin-right: 10px;
+}
+.labelQuantity {
+	font-weight: bold;
+	font-family: "Shadows Into Light";
+	font-size: 20px;
+}

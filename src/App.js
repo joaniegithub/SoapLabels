@@ -8,7 +8,7 @@ const theme = createTheme({
 	typography: {
 	  fontFamily: [
 		'Arial',
-		'Montserrat',
+		'Lato',
 		'Shadows Into Light',
 		'-apple-system',
 		'BlinkMacSystemFont',

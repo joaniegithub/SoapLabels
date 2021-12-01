@@ -13,6 +13,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import NewLabelModal from './NewLabelModal';
 import LabelsPrintView from './LabelsPrintView';
+import QuantitySelector from './components/QuantitySelector';
 
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
@@ -44,8 +45,9 @@ export default function LabelMaker() {
 	}
 	
 	// Edit / Delete
-	const handleSoapLabelQtyChange = (soapLabel, event) => {
-		soapLabel.quantity = parseInt(event.target.value);
+	const handleSoapLabelQtyChange = (soapLabel, qty) => {
+		soapLabel.quantity = parseInt(qty);
+		setSoapLabels([...soapLabels]);
 		saveSoapLabels(soapLabels);
 	};
 	const handleEdit = (soapLabel) => {
@@ -62,7 +64,7 @@ export default function LabelMaker() {
 		const index = soapLabels.indexOf(editLabel);
 		if (index > -1) {
 			soapLabels.splice(index, 1);
-			setSoapLabels(soapLabels);
+			setSoapLabels([...soapLabels]);
 			saveSoapLabels(soapLabels);
 		}
 		setEditLabel({});
@@ -91,8 +93,11 @@ export default function LabelMaker() {
 	
 	React.useEffect(() => {
 		const cookies = new Cookies();
-		setSoapLabels(cookies.get('SoapLabels'));
+		setSoapLabels(cookies.get('SoapLabels') || []);
 	}, []);
+
+	React.useEffect(() => {
+	}, [soapLabels]);
 	
 	let index = 0;
 
@@ -106,7 +111,7 @@ export default function LabelMaker() {
 					</div>
 				</div>
 				<Grid container spacing={0} className="soapLabelRows">
-					{soapLabels.map(soapLabel => {
+					{soapLabels && soapLabels.length ? soapLabels.map(soapLabel => {
 						index++;
 						return(
 							<Grid
@@ -116,33 +121,18 @@ export default function LabelMaker() {
 							>
 								<span className="soapLabelRowName">{soapLabel.name} </span>
 								<div className="soapLabelButtons rightAbsoluteContainer" >
-									<TextField
-										className="soapLabelRowQty"
-										label="Quantity"
-										type="number"
-										size="small"
-										min="1"
-										value={soapLabel.quantity}
-										onChange={(e) => handleSoapLabelQtyChange(soapLabel, e)}
-										InputLabelProps={{
-											shrink: true,
-										}}
+									<QuantitySelector
+										quantity={soapLabel.quantity}
+										handleUpdateQty={(qty) => handleSoapLabelQtyChange(soapLabel, qty)}
 									/>
-									{/*<TextField
-										id="soap-fragrances"
-										className="soapLabelRowQty"
-										size="small"
-										label="Qty"
-										value={soapLabel.quantity}
-										onChange={(e) => handleSoapLabelQtyChange(soapLabel, e)}
-										style={{ width: '60px', height: '24px' }}
-									/>*/}
-									<IconButton onClick={(e) => handleEdit(soapLabel)}><EditIcon/></IconButton>
-									<IconButton onClick={(e) => handleDelete(soapLabel)}><CloseIcon/></IconButton>
+									<IconButton size="small" onClick={(e) => handleEdit(soapLabel)}><EditIcon/></IconButton>
+									<IconButton size="small" onClick={(e) => handleDelete(soapLabel)}><CloseIcon/></IconButton>
 								</div>
 							</Grid>
 						);
-					})}
+					}) : (
+						<div>List is empty. Create a Soap Label</div>
+					)}
 				</Grid>
 				<Dialog
 					open={confirmDeleteOpen}
