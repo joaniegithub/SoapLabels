@@ -1,0 +1,43 @@
+.labelWideRowGridItem {
+	padding: 0;
+	border: 1px dotted #eee;
+	display: flex;
+	align-items: center;
+	width: 100%;
+}
+.labelWideRowGridItemLeft,
+.labelWideRowGridItemRight {
+	display: inline-block;
+	width: 100%;
+}
+.labelWideRowGridItemLeft {
+	padding-right: 7px;
+}
+.labelWideRowGridItemRight {
+	padding-left: 7px;
+	border-left: 3px solid #000;
+}
+.labelWideRowSoapName {
+	font-family: "Shadows Into Light";
+	font-size: 32px;
+	line-height: 18px;
+	margin: 0 0 10px;
+}
+.labelWideRowSoapIngredients {
+	font-family: "Lato";
+	font-size: 12px;
+	line-height: 16px;
+	margin: 10px 0 10px;
+}
+.labelWideRowSoapBrand {
+	font-family: "Shadows Into Light";
+	font-size: 18px;
+	line-height: 18px;
+	margin: 0 0 10px;
+}
+.labelWideRowSoapPhrase {
+	font-family: "Shadows Into Light";
+	font-size: 14px;
+	line-height: 18px;
+	margin: 10px 0 0;
+}

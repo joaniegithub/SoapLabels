@@ -6,7 +6,7 @@ import Cookies from 'universal-cookie';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
-import LabelMaker from './LabelMaker';
+import SoapLabels from './SoapLabels';
 
 const images = [
 	'arab_tile',
@@ -64,23 +64,21 @@ export default function Main() {
 	React.useEffect(() => {
 		setMainClassName(`main main_${images[bgTileIndex]}`);
 	}, [bgTileIndex]);
-	
-	let index = 0;
 
 	return (
 		<div className={mainClassName}>
 			<Container className="header noPrint wrapperForAbsolute">
-				<h1 className="mainTitle">Soap Recipe Maker</h1>
+				<h1 className="mainTitle">Soap Labels</h1>
 				<div className="bgSwitcherContainer rightAbsoluteContainer">
 					<IconButton onClick={handlePreviousBg}><ArrowBackIosNewIcon/></IconButton>
 					<IconButton onClick={handleNextBg}><ArrowForwardIosIcon/></IconButton>
 				</div>
 			</Container>
 			<Container className="container">
-				<LabelMaker/>
+				<SoapLabels/>
 			</Container>
 			<Container className="footer noPrint">
-				<p className="footerCopyright">@2021 Joanie Lessnick</p>
+				<p className="footerCopyright">Soap Labels @2021 Joanie Lessnick</p>
 			</Container>
 		</div>
 	);

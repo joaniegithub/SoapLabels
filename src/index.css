@@ -49,10 +49,16 @@ code {
 	div.gridResult,
 	div.gridPrintLabels,
 	div.labelGridItem {
+		box-shadow: none;
 		border-width: 0 !important;
 	}
 	div.labelGridItem {
 		border-width: 0 !important;
-		padding: 15px;
+		vertical-align: top;
+		width: 100%;
+	}
+	div.gridPrintRow {
+		page-break-inside: avoid;
+		break-inside: avoid;
 	}
 }

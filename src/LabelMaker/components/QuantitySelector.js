@@ -6,7 +6,15 @@ import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
-
+// const styles = {
+// 	iconButton: {
+// 		padding: '2px',
+// 		'svg': {
+// 			width: '20px',
+// 			height: '20px',
+// 		},
+// 	}
+// }
 
 export default function QuantitySelector(props) {
 	const [quantity, setQuantity] = React.useState(props.quantity);
@@ -24,9 +32,9 @@ export default function QuantitySelector(props) {
 
 	return (
 		<div className="wrapperQuantity">
-			<IconButton size="small" onClick={handleRemove}><RemoveIcon/></IconButton>
+			<IconButton size="small" className="iconButton" onClick={handleRemove}><RemoveIcon/></IconButton>
 			<span className="labelQuantity">{quantity}</span>
-			<IconButton size="small" onClick={handleAdd}><AddIcon/></IconButton>
+			<IconButton size="small" className="iconButton" onClick={handleAdd}><AddIcon/></IconButton>
 		</div>
 	);
 }

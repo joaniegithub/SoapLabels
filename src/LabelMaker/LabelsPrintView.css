@@ -1,11 +1,10 @@
 .gridPrintLabels {
 	padding: 30px 20px;
-	border: solid 1px #000;
+	box-shadow: rgb(100 100 111 / 50%) 2px 2px 7px 0px;
 	display: block;
 }
 
 .gridPrintRow {
-	page-break-inside: avoid;
-	break-inside: avoid;
-	display: table;
+	display: flex;
+	align-items: flex-start;
 }

@@ -1,4 +1,4 @@
-import './NewLabelModal.css';
+import './LabelModal.css';
 import * as React from 'react';
 import { Box } from '@mui/material';
 import { Button } from '@mui/material';
@@ -7,11 +7,10 @@ import { FormControl } from '@mui/material';
 import { Modal } from '@mui/material';
 import { Grid } from '@mui/material';
 import { IconButton } from '@mui/material';
-import { Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import SaveIcon from '@mui/icons-material/Save';
-import Label from './Label';
+import Label from './labelLayouts/Label';
 
 const translations = {
 	'Almond Oil, sweet': 'Huile d\'amande douce',
@@ -38,8 +37,9 @@ const translations = {
 	'Sunflower Oil': 'Huile de tournesol',
 }
 
-export default function NewSoapModal(props) {
+export default function LabelModal(props) {
 	const { editLabel } = props;
+	const [settings] = React.useState(props.settings);
 	const [soapName, setSoapName] = React.useState('');
 	const [soapNameError, setSoapNameError] = React.useState(false);
 	const [soapCode, setSoapCode] = React.useState('');
@@ -48,9 +48,9 @@ export default function NewSoapModal(props) {
 	const [soapColorants, setSoapColorants] = React.useState('');
 	
 	const [ingredientsCodeOutput, setIngredientsCodeOutput] = React.useState('');
-	const [soapCodeData, setSoapCodeData] = React.useState({});
+	const [soapCodeData/*, setSoapCodeData*/] = React.useState({});
 	const [useSoapIngredients, setUseSoapIngredients] = React.useState(false);
-	const [soapBrand, setSoapBrand] = React.useState("Joanie Soaperie");
+	const [soapBrand/*, setSoapBrand*/] = React.useState("Joanie Soaperie");
 	
 	const handleSoapNameChange = (event) => {
 		setSoapName(event.target.value);
@@ -69,29 +69,10 @@ export default function NewSoapModal(props) {
 		setSoapNameError(!soapName);
 		setSoapCodeError(!soapCode);
 		if(soapName && soapCode && ingredientsCodeOutput) {
-			props.saveNewLabel(soapName, ingredientsCodeOutput, soapBrand);
+			props.saveLabel(soapName, ingredientsCodeOutput, soapBrand);
 			props.onClose();
 		}
 	};
-	console.log(soapNameError);
-	console.log(soapCodeError);
-	
-	React.useEffect(() => {
-		generateIngredients();
-	}, [soapCode, soapColorants, soapFragrances]);
-	
-	React.useEffect(() => {
-		console.log("yay", editLabel);
-		if(editLabel.name || editLabel.ingredients) {
-			setSoapName(editLabel.name);
-			setSoapCode(editLabel.ingredients);
-			setUseSoapIngredients(true);
-		} else {
-			setSoapName("");
-			setSoapCode("");
-			setUseSoapIngredients(false);
-		}
-	}, [editLabel]);
 
 	const generateIngredients = () => {
 		let allIngredients = soapCode;
@@ -126,6 +107,22 @@ export default function NewSoapModal(props) {
 		}
 		setIngredientsCodeOutput(allIngredients);
 	};
+	
+	React.useEffect(() => {
+		generateIngredients();
+	}, [soapCode, soapColorants, soapFragrances]);
+	
+	React.useEffect(() => {
+		if(editLabel && (editLabel.name || editLabel.ingredients)) {
+			setSoapName(editLabel.name);
+			setSoapCode(editLabel.ingredients);
+			setUseSoapIngredients(true);
+		} else {
+			setSoapName("");
+			setSoapCode("");
+			setUseSoapIngredients(false);
+		}
+	}, [editLabel]);
 
 	const handleClose = () => {
 		props.onClose();
@@ -194,9 +191,11 @@ export default function NewSoapModal(props) {
 						<Grid item xs={12} className="gridItemButtons">
 							<Button
 								className="button"
+								size="small"
 								endIcon={<BackspaceIcon />}>Clear</Button>
 							<Button
 								className="button"
+								size="small"
 								endIcon={<SaveIcon />} 
 								onClick={handleClickSave}>Save</Button>
 						</Grid>
@@ -205,7 +204,14 @@ export default function NewSoapModal(props) {
 				
 				<h2 className="secondTitle">Label Preview</h2>
 				<div className="gridResult">
-					<Label size={4} soapName={soapName} ingredients={ingredientsCodeOutput} brand={soapBrand}/>
+					<Label
+						settings={settings}
+						layout={settings.layout}
+						soapName={soapName}
+						ingredients={ingredientsCodeOutput}
+						brand={soapBrand}
+						phrase="Some catchy phrase"
+					/>
 				</div>
 			</Box>
 		</Modal>

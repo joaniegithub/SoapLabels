@@ -1,0 +1,6 @@
+.gridLayoutsContainer {
+	display: flex;
+	justify-content: space-between;
+}
+.gridItemLayout {
+}

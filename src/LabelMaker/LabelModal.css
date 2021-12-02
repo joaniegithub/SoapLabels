@@ -15,14 +15,9 @@
 }
 .gridResult {
 	padding: 30px 20px;
-	border: solid 1px #000;
+	box-shadow: rgb(100 100 111 / 50%) 2px 2px 7px 0px;
 	display: flex;
 	justify-content: center;
-}
-
-.gridItemClose {
-	display: flex;
-	justify-content: flex-end;
 }
 .gridItemButtons {
 	width: 100%;

@@ -90,7 +90,7 @@
 	width: 838px !important;
 	background-color: #fff;
 	border-radius: 30px;
-	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 0px 20px 0px;
 }
 
 .footer {
@@ -102,6 +102,11 @@
 	font-size: 12px;
 	font-weight: bold;
 	text-align: right;
+}
+
+.gridItemClose {
+	display: flex;
+	justify-content: flex-end;
 }
 
 .wrapperForAbsolute {
