@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/SoapLabels/static/css/main.f048964f.chunk.css",
-    "main.js": "/SoapLabels/static/js/main.8832db32.chunk.js",
-    "main.js.map": "/SoapLabels/static/js/main.8832db32.chunk.js.map",
+    "main.js": "/SoapLabels/static/js/main.bf1356df.chunk.js",
+    "main.js.map": "/SoapLabels/static/js/main.bf1356df.chunk.js.map",
     "runtime-main.js": "/SoapLabels/static/js/runtime-main.a5b3a743.js",
     "runtime-main.js.map": "/SoapLabels/static/js/runtime-main.a5b3a743.js.map",
     "static/js/2.88307025.chunk.js": "/SoapLabels/static/js/2.88307025.chunk.js",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.a5b3a743.js",
     "static/js/2.88307025.chunk.js",
     "static/css/main.f048964f.chunk.css",
-    "static/js/main.8832db32.chunk.js"
+    "static/js/main.bf1356df.chunk.js"
   ]
 }
