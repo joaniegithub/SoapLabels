@@ -117,3 +117,12 @@
 	top: 0;
 	right: 0;
 }
+
+.modalBox {
+	/* position: absolute;
+	top: 30px;
+	bottom: 30px;
+	left: 50%;
+	transform: translate(-420px, 0); */
+	width: 839px !important;
+}

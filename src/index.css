@@ -46,9 +46,9 @@ code {
 	.noPrint {
 		display: none !important;
 	}
-	div.gridResult,
 	div.gridPrintLabels,
-	div.labelGridItem {
+	div.labelGridItem,
+	div.labelWideRowGridItem {
 		box-shadow: none;
 		border-width: 0 !important;
 	}

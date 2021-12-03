@@ -33,16 +33,33 @@ export default function LabelsList(props) {
 	}
 	
 	// (New / Edit)
-	const saveLabel = (name, ingredients, brand) => {
-		console.log(editLabel);
+	const saveLabel = (name, ingredients, soapCode, soapIngredients, soapFragrances, soapColorants, phrase, useSoapCalcRecipe, translateFrench) => {
 		if (editLabel) {
 			editLabel.name = name;
 			editLabel.ingredients = ingredients;
-			editLabel.brand = brand;
+			editLabel.soapCode = soapCode;
+			editLabel.soapIngredients = soapIngredients;
+			editLabel.soapFragrances = soapFragrances;
+			editLabel.soapColorants = soapColorants;
+			editLabel.phrase = phrase;
+			editLabel.useSoapCalcRecipe = useSoapCalcRecipe;
+			editLabel.translateFrench = translateFrench;
 			console.log(editLabel);
 		} else {
-			console.log("push");
-			props.soapLabels.push({name, ingredients, brand, quantity: 1});
+			props.soapLabels.push(
+				{
+					name, 
+					ingredients, 
+					soapCode, 
+					soapIngredients, 
+					soapFragrances, 
+					soapColorants, 
+					phrase, 
+					useSoapCalcRecipe, 
+					translateFrench, 
+					quantity: 1,
+				}
+			);
 		}
 		props.saveSoapLabels(props.soapLabels);
 		setEditLabel(undefined);

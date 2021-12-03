@@ -12,8 +12,14 @@ export default function Label(props) {
 	const layout = props.layout || "columns";
 	const leftColumnWidth = props.settings.leftColumnWidth;
 	const layoutNbPerRow = props.settings.layoutNbPerRow;
+	const textAlignment = props.settings.textAlignment;
+	const seperatorWidth = props.settings.seperatorWidth;
+	const demo = !!props.demo;
 
-	const style = {fontFamily: props?.settings?.font};
+	const styleFont = {fontFamily: props.settings.font};
+	const styleFontAlign = {fontFamily: props.settings.font, textAlign: textAlignment};
+	const styleAlign = {textAlign: textAlignment};
+	const styleBackgroundColor = {backgroundColor:  demo ? '#f8f8f8' : 'transparent'};
 
 	return (
 		<React.Fragment>
@@ -25,17 +31,20 @@ export default function Label(props) {
 					paddingBottom={pb+'px'}
 					paddingLeft={pl+'px'}
 					paddingRight={pr+'px'}
+					style={styleBackgroundColor}
 				>
-					<p style={style} className="labelSoapName">{props.soapName}</p>
-					<p className="labelSoapIngredients">{props.ingredients}</p>
-					<p className="labelSoapBrand">{props.brand}</p>
-					{props.phrase && (<p className="labelSoapPhrase">{props.phrase}</p>)}
+					<p style={styleFontAlign} className="labelSoapName">{props.soapName}</p>
+					<p style={styleAlign} className="labelSoapIngredients">{props.ingredients}</p>
+					{props.brand && (<p style={styleAlign} className="labelSoapBrand">{props.brand}</p>)}
+					{props.phrase && (<p style={styleAlign} className="labelSoapPhrase">{props.phrase}</p>)}
 				</Grid>
 			) : (
 				<Grid xs={12} item
 					className="labelWideRowGridItem"
 					paddingTop={pt+'px'}
-					paddingBottom={pb+'px'}>
+					paddingBottom={pb+'px'}
+					style={styleBackgroundColor}
+				>
 					<Grid item 
 						xs={12*leftColumnWidth} 
 						paddingLeft={pl1+'px'}
@@ -49,9 +58,10 @@ export default function Label(props) {
 						paddingLeft={pl2+'px'}
 						paddingRight={pr2+'px'}
 						className="labelWideRowGridItemRight" 
+						style={{borderLeft: `${seperatorWidth}px solid #000`}}
 					>
-						<p className="labelWideRowSoapBrand">{props.brand}</p>
-						<p style={style} className="labelWideRowSoapName">{props.soapName}</p>
+						{props.brand && (<p className="labelWideRowSoapBrand">{props.brand}</p>)}
+						<p style={styleFont} className="labelWideRowSoapName">{props.soapName}</p>
 						{props.phrase && (<p className="labelWideRowSoapPhrase">{props.phrase}</p>)}
 					</Grid>
 				</Grid>

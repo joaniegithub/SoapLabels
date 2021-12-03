@@ -11,7 +11,9 @@ const defaultSettings = {
 	"brand": "Soap Brand",
 	"layout": "columns",
 	"layoutNbPerRow": 3,
+	"textAlignment": "left",
 	"leftColumnWidth": 0.65,
+	"seperatorWidth": 5,
 	"padding": {'pt': 20, 'pb': 20, 'pl': 20, 'pr': 20, 'pl1': 50, 'pr1': 50, 'pl2': 10, 'pr2': 20},
 };
 
@@ -42,7 +44,6 @@ export default function SoapLabels() {
 	}, []);
 
 	React.useEffect(() => {
-		console.log(settings);
 	}, [soapLabels, settings]);
 
 	return (

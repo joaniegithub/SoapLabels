@@ -3,7 +3,8 @@ import * as React from 'react';
 import Label from './labelLayouts/Label';
 import SettingsModal from './SettingsModal';
 import { IconButton } from '@mui/material';
-import Tooltip from '@mui/material/Tooltip';
+import { Grid } from '@mui/material';
+import { Tooltip } from '@mui/material';
 
 import PrintIcon from '@mui/icons-material/Print';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -22,13 +23,12 @@ export default function LabelsPrintView(props) {
 	const handleSettingsModalClose = () => {
 		setSettingsModalOpen(false);
 	}
-	console.log('settings=',settings);
+	
 	const renderedLabels = (soapLabels, _layoutNbPerRow, _layout) => {
 		if(_layout === "wide") {
 			_layoutNbPerRow = 1;
 		}
 
-		console.log(_layoutNbPerRow, _layout);
 		let labels = [];
 		soapLabels.forEach(soapLabel => {
 			for (let i=0; i<soapLabel.quantity; i++){
@@ -51,6 +51,7 @@ export default function LabelsPrintView(props) {
 							soapName={label.name} 
 							ingredients={label.ingredients} 
 							brand={settings.brand}
+							phrase={label.phrase}
 						/>
 					);
 				})}
@@ -71,6 +72,14 @@ export default function LabelsPrintView(props) {
 		return null;
 	}
 
+	const isColumnLayout = layout === "columns";
+	const pagePadding = {
+		pt: Math.max(0, 20-settings.padding.pt)+'px',
+		pb: Math.max(0, 20-settings.padding.pb)+'px',
+		pl: Math.max(0, 20-(isColumnLayout ? settings.padding.pl : settings.padding.pl1))+'px',
+		pr: Math.max(0, 20-(isColumnLayout ? settings.padding.pr : settings.padding.pr2))+'px',
+	};
+
 	return (
 		<React.Fragment>
 			<SettingsModal
@@ -81,20 +90,20 @@ export default function LabelsPrintView(props) {
 			/>
 			<div className="wrapperForAbsolute noPrint">
 				<h2 className="secondTitle">Soap Labels Print Preview
-				<Tooltip title="Lines are for visual aids only. And margins could render differently in your print settings." placement="right">
-					<IconButton size="small">
-						<InfoIcon />
-					</IconButton>
-				</Tooltip>
+					<Tooltip title="Lines are for visual aids only. And margins could render differently in your print settings." placement="right">
+						<IconButton size="small">
+							<InfoIcon />
+						</IconButton>
+					</Tooltip>
 				</h2>
 				<div className="rightAbsoluteContainer">
 					<IconButton onClick={handleClickPrint}><PrintIcon/></IconButton>
 					<IconButton onClick={handleClickOpenSettings}><SettingsIcon/></IconButton>
 				</div>
 			</div>
-			<div className="gridPrintLabels">
+			<Grid item className="gridPrintLabels" {...pagePadding}>
 				{props.soapLabels && props.soapLabels.length ? renderedLabels(props.soapLabels, settings.layoutNbPerRow, settings.layout) : null}
-			</div>
+			</Grid>
 		</React.Fragment>
 	);
 }
