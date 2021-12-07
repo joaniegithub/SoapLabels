@@ -15,84 +15,79 @@ import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
+import { useDispatch } from 'react-redux';
+import { addSoapLabel, editSoapLabel, useSoapLabels, useCurrentSoapLabel, selectCurrentSoapLabel, deleteSoapLabel, editSettings } from '../store/actions';
 
 export default function LabelsList(props) {
-	const [settings] = React.useState(props.settings);
 	const [confirmDeleteOpen, setConfirmDeleteOpen] = React.useState(false);
 	const [labelModalOpen, setLabelModalOpen] = React.useState(false);
-	const [editLabel, setEditLabel] = React.useState(undefined);
+	const [soapLabelToDelete, setSoapLabelToDelete] = React.useState(undefined);
+
+	const dispatch = useDispatch();
+	const soapLabels = useSoapLabels();
+	// const settings = useSettings();
+	const currentSoapLabel = useCurrentSoapLabel();
 
 	// Label Modal
 	const handleLabelModalOpen = () => {
 		setLabelModalOpen(true);
-		setEditLabel(undefined);
+		dispatch(selectCurrentSoapLabel(undefined));
 	}
 	const handleLabelModalClose = () => {
 		setLabelModalOpen(false);
-		setEditLabel(undefined);
+		dispatch(selectCurrentSoapLabel(undefined));
 	}
 	
 	// (New / Edit)
 	const saveLabel = (name, ingredients, soapCode, soapIngredients, soapFragrances, soapColorants, phrase, useSoapCalcRecipe, translateFrench) => {
-		if (editLabel) {
-			editLabel.name = name;
-			editLabel.ingredients = ingredients;
-			editLabel.soapCode = soapCode;
-			editLabel.soapIngredients = soapIngredients;
-			editLabel.soapFragrances = soapFragrances;
-			editLabel.soapColorants = soapColorants;
-			editLabel.phrase = phrase;
-			editLabel.useSoapCalcRecipe = useSoapCalcRecipe;
-			editLabel.translateFrench = translateFrench;
-			console.log(editLabel);
+		const soapLabelData = {
+			uid: new Date().getTime(), 
+			name, 
+			ingredients, 
+			soapCode, 
+			soapIngredients, 
+			soapFragrances, 
+			soapColorants, 
+			phrase, 
+			useSoapCalcRecipe, 
+			translateFrench, 
+		};
+		if (currentSoapLabel) {
+			dispatch(editSoapLabel(currentSoapLabel, soapLabelData));
 		} else {
-			props.soapLabels.push(
-				{
-					name, 
-					ingredients, 
-					soapCode, 
-					soapIngredients, 
-					soapFragrances, 
-					soapColorants, 
-					phrase, 
-					useSoapCalcRecipe, 
-					translateFrench, 
-					quantity: 1,
-				}
-			);
+			soapLabelData.quantity = 1;
+			dispatch(addSoapLabel(soapLabelData));
 		}
-		props.saveSoapLabels(props.soapLabels);
-		setEditLabel(undefined);
+		dispatch(editSettings({translateFrench}));
+		dispatch(selectCurrentSoapLabel(undefined));
 	}
 	
 	// Change Qty
 	const handleSoapLabelQtyChange = (soapLabel, qty) => {
-		soapLabel.quantity = parseInt(qty);
-		props.saveSoapLabels(props.soapLabels);
+		const soapLabelData = {
+			quantity:  parseInt(qty),
+		};
+		dispatch(editSoapLabel(soapLabel, soapLabelData));
 	};
 	// Edit
 	const handleEdit = (soapLabel) => {
-		setEditLabel(soapLabel);
+		dispatch(selectCurrentSoapLabel(soapLabel));
 		setLabelModalOpen(true);
 	};
 	// Delete
 	const handleDelete = (soapLabel) => {
-		setEditLabel(soapLabel);
+		setSoapLabelToDelete(soapLabel);
 		setConfirmDeleteOpen(true);
 	};
 	// Confirm Delete Dialog
 	const handleConfirmDeleteClose = () => {
 		setConfirmDeleteOpen(false);
-		const index = props.soapLabels.indexOf(editLabel);
-		if (index > -1) {
-			props.soapLabels.splice(index, 1);
-			props.saveSoapLabels(props.soapLabels);
-		}
-		setEditLabel(undefined);
+		dispatch(deleteSoapLabel(soapLabelToDelete));
+		setSoapLabelToDelete(undefined);
 	};
 	const handleConfirmDeleteDisagree = () => {
 		setConfirmDeleteOpen(false);
-		setEditLabel(undefined);
+		setSoapLabelToDelete(undefined);
 	};
 	
 	let index = 0;
@@ -107,7 +102,7 @@ export default function LabelsList(props) {
 					</div>
 				</div>
 				<Grid container spacing={0} className="soapLabelRows">
-					{props.soapLabels && props.soapLabels.length ? props.soapLabels.map(soapLabel => {
+					{soapLabels && soapLabels.length ? soapLabels.map(soapLabel => {
 						index++;
 						return(
 							<Grid
@@ -130,14 +125,14 @@ export default function LabelsList(props) {
 						<div>List is empty. Create a Soap Label</div>
 					)}
 				</Grid>
-				{editLabel && (
+				{soapLabelToDelete && (
 					<Dialog
 						open={confirmDeleteOpen}
 						onClose={handleConfirmDeleteClose}
 						aria-labelledby="alert-dialog-title"
 					>
 						<DialogTitle id="alert-dialog-title">
-							{`Delete soap label "${editLabel.name}" ?`}
+							{`Delete soap label "${soapLabelToDelete.name}" ?`}
 						</DialogTitle>
 						<DialogActions>
 							<Button variant="outlined" onClick={handleConfirmDeleteDisagree}>No</Button>
@@ -149,11 +144,9 @@ export default function LabelsList(props) {
 				)}
 			</Grid>
 			<LabelModal
-				open={labelModalOpen}
-				onClose={handleLabelModalClose}
+				labelModalOpen={labelModalOpen}
+				onCloseLabelModal={handleLabelModalClose}
 				saveLabel={saveLabel}
-				editLabel={editLabel}
-				settings={settings}
 			/>
 		</React.Fragment>
 	);

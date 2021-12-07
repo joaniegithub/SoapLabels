@@ -17,7 +17,8 @@ import RemoveIcon from '@mui/icons-material/Remove';
 // }
 
 export default function QuantitySelector(props) {
-	const [quantity, setQuantity] = React.useState(props.quantity);
+	const { quantity: quantityProps, handleUpdateQty } = props;
+	const [quantity, setQuantity] = React.useState(quantityProps);
 
 	const handleRemove = () => {
 		updateQuantity(quantity-1);
@@ -27,7 +28,7 @@ export default function QuantitySelector(props) {
 	};
 	const updateQuantity = (newQty) => {
 		setQuantity(newQty);
-		props.handleUpdateQty(newQty);
+		handleUpdateQty(newQty);
 	};
 
 	return (

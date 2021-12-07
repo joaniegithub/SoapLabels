@@ -18,6 +18,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import InfoIcon from '@mui/icons-material/Info';
 
 import Label from './labelLayouts/Label';
+import { useCurrentSoapLabel, useSettings } from '../store/actions';
 
 const translations = {
 	'Almond Oil, sweet': 'Huile d\'amande douce',
@@ -45,8 +46,11 @@ const translations = {
 }
 
 export default function LabelModal(props) {
-	const { editLabel } = props;
-	const [settings] = React.useState(props.settings);
+	const settings = useSettings();
+	const currentSoapLabel = useCurrentSoapLabel();
+
+	const {saveLabel, onCloseLabelModal, labelModalOpen} = props;
+
 	const [useThinSpace, setUseThinSpace] = React.useState(false);
 	const [useSoapCalcRecipe, setUseSoapCalcRecipe] = React.useState(false);
 	const [translateFrench, setTranslateFrench] = React.useState(false);
@@ -100,7 +104,7 @@ export default function LabelModal(props) {
 		setSoapRecipeError(!soapCode);
 		if(soapName && soapCode && ingredientsCodeOutput) {
 			// name, ingredients, soapCode, soapIngredients, soapFragrances, soapColorants, phrase, translateFrench
-			props.saveLabel(
+			saveLabel(
 				soapName, 
 				ingredientsCodeOutput, 
 				soapCode, 
@@ -111,7 +115,7 @@ export default function LabelModal(props) {
 				useSoapCalcRecipe, 
 				translateFrench
 			);
-			props.onClose();
+			onCloseLabelModal();
 		}
 	};
 
@@ -165,16 +169,15 @@ export default function LabelModal(props) {
 	}, [soapCode, soapIngredients, soapColorants, soapFragrances, soapPhrase, useThinSpace, useSoapCalcRecipe, translateFrench]);
 	
 	React.useEffect(() => {
-		if(editLabel && editLabel.name && editLabel.ingredients) {
-			console.log(editLabel);
-			setSoapName(editLabel.name);
-			setSoapPhrase(editLabel.phrase);
-			setSoapCode(editLabel.soapCode);
-			setSoapIngredients(editLabel.soapIngredients || editLabel.ingredients);
-			setSoapFragrances(editLabel.soapFragrances);
-			setSoapColorants(editLabel.soapColorants);
-			setTranslateFrench(editLabel.translateFrench);
-			setUseSoapCalcRecipe(editLabel.useSoapCalcRecipe && !!editLabel.soapCode);
+		if(currentSoapLabel && currentSoapLabel.name && currentSoapLabel.ingredients) {
+			setSoapName(currentSoapLabel.name);
+			setSoapPhrase(currentSoapLabel.phrase);
+			setSoapCode(currentSoapLabel.soapCode);
+			setSoapIngredients(currentSoapLabel.soapIngredients || currentSoapLabel.ingredients);
+			setSoapFragrances(currentSoapLabel.soapFragrances);
+			setSoapColorants(currentSoapLabel.soapColorants);
+			setTranslateFrench(currentSoapLabel.translateFrench);
+			setUseSoapCalcRecipe(currentSoapLabel.useSoapCalcRecipe && !!currentSoapLabel.soapCode);
 		} else {
 			setSoapName("");
 			setSoapPhrase("");
@@ -182,13 +185,13 @@ export default function LabelModal(props) {
 			setSoapIngredients("");
 			setSoapFragrances("");
 			setSoapColorants("");
-			setTranslateFrench(false);
+			setTranslateFrench(settings.translateFrench || false);
 			setUseSoapCalcRecipe(true);
 		}
-	}, [editLabel]);
+	}, [currentSoapLabel, settings]);
 
 	const handleClose = () => {
-		props.onClose();
+		onCloseLabelModal();
 	};
 	
 	const isColumnLayout = settings.layout === "columns";
@@ -204,7 +207,7 @@ export default function LabelModal(props) {
 		and this if checked, all ingredients will be extracted${translateFrench ? ", translated in french" : ""} and ordered by weight.`;
 	
 	return (
-		<Dialog open={props.open} scroll="body" maxWidth={'1000px'}>
+		<Dialog open={labelModalOpen} scroll="body" maxWidth={'1000px'}>
 			<DialogContent dividers={false}>
 				<Box className="modalBox">
 					<FormControl fullWidth={true} component="form" className="form">
@@ -227,7 +230,11 @@ export default function LabelModal(props) {
 									onChange={handleSoapNameChange}
 									style={{ width: '100%' }}
 								/>
-								<FormControlLabel control={<Checkbox checked={useThinSpace} onChange={handleUseThinSpaceChange} />} label="Use thin spaces in Soap Name" />
+								<FormControlLabel 
+									control={<Checkbox 
+									checked={useThinSpace}
+									onChange={handleUseThinSpaceChange} />} 
+									label="Use thin spaces in Soap Name" />
 							</Grid>
 							<Grid item xs={6}>
 								<TextField
@@ -332,11 +339,8 @@ export default function LabelModal(props) {
 						{arrPerRow.map(i => (
 							<Label
 								key={`label-${i}`}
-								settings={settings}
-								layout={settings.layout}
 								soapName={soapName}
 								ingredients={ingredientsCodeOutput}
-								brand={settings.soapBrand}
 								phrase={soapPhrase}
 							/>
 						))}

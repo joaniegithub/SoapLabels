@@ -10,11 +10,15 @@ import PrintIcon from '@mui/icons-material/Print';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 
+import { useSoapLabels, useSettings } from '../store/actions';
+
 export default function LabelsPrintView(props) {
-	const [settings] = React.useState(props.settings);
-	const [layoutNbPerRow/*, setLayoutNbPerRow*/] = React.useState(props.settings.layoutNbPerRow);
-	const [layout/*, setLayoutNbPerRow*/] = React.useState(props.settings.layout);
 	const [settingsModalOpen, setSettingsModalOpen] = React.useState(false);
+
+	const soapLabels = useSoapLabels();
+	const settings = useSettings();
+	const [layoutNbPerRow/*, setLayoutNbPerRow*/] = React.useState(settings.layoutNbPerRow);
+	const [layout/*, setLayoutNbPerRow*/] = React.useState(settings.layout);
 
 	// Settings Modal
 	const handleClickOpenSettings = () => {
@@ -24,13 +28,13 @@ export default function LabelsPrintView(props) {
 		setSettingsModalOpen(false);
 	}
 	
-	const renderedLabels = (soapLabels, _layoutNbPerRow, _layout) => {
+	const renderLabels = (_soapLabels, _layoutNbPerRow, _layout) => {
 		if(_layout === "wide") {
 			_layoutNbPerRow = 1;
 		}
 
 		let labels = [];
-		soapLabels.forEach(soapLabel => {
+		_soapLabels.forEach(soapLabel => {
 			for (let i=0; i<soapLabel.quantity; i++){
 				labels.push(soapLabel);
 			}
@@ -45,12 +49,9 @@ export default function LabelsPrintView(props) {
 					const index = r*_layoutNbPerRow+l;
 					return (
 						<Label
-							settings={settings}
-							layout={settings.layout}
 							key={`labelPreview-${index}`}
 							soapName={label.name} 
 							ingredients={label.ingredients} 
-							brand={settings.brand}
 							phrase={label.phrase}
 						/>
 					);
@@ -68,10 +69,6 @@ export default function LabelsPrintView(props) {
 	React.useEffect(() => {
 	}, [layoutNbPerRow, layout]);
 
-	if(!settings) {
-		return null;
-	}
-
 	const isColumnLayout = layout === "columns";
 	const pagePadding = {
 		pt: Math.max(0, 20-settings.padding.pt)+'px',
@@ -83,10 +80,8 @@ export default function LabelsPrintView(props) {
 	return (
 		<React.Fragment>
 			<SettingsModal
-				settings={settings}
-				saveSettings={props.saveSettings}
-				open={settingsModalOpen}
-				onClose={handleSettingsModalClose}
+				settingsModalOpen={settingsModalOpen}
+				onCloseSettingsModal={handleSettingsModalClose}
 			/>
 			<div className="wrapperForAbsolute noPrint">
 				<h2 className="secondTitle">Soap Labels Print Preview
@@ -102,7 +97,7 @@ export default function LabelsPrintView(props) {
 				</div>
 			</div>
 			<Grid item className="gridPrintLabels" {...pagePadding}>
-				{props.soapLabels && props.soapLabels.length ? renderedLabels(props.soapLabels, settings.layoutNbPerRow, settings.layout) : null}
+				{soapLabels && soapLabels.length ? renderLabels(soapLabels, settings.layoutNbPerRow, settings.layout) : null}
 			</Grid>
 		</React.Fragment>
 	);

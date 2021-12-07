@@ -21,6 +21,9 @@ import CloseIcon from '@mui/icons-material/Close';
 // import SaveIcon from '@mui/icons-material/Save';
 import { Slider } from '@mui/material';
 
+import { useDispatch } from 'react-redux';
+import { editSettings, useSettings } from '../store/actions';
+
 const sliderStyle = {marginLeft: 12, marginRight: 12, width: "auto"};
 const sliderPaddingProperties = {
 	min: 10, max: 100,
@@ -28,58 +31,54 @@ const sliderPaddingProperties = {
 };
 
 export default function SettingsModal(props) {
-	const [settings/*, setSettings*/] = React.useState(props.settings);
+	const dispatch = useDispatch();
+	const settings = useSettings();
 
-	const [soapBrand, setSoapBrand] = React.useState(props.settings.brand);
-	const [soapBrandError/*, setSoapBrandError*/] = React.useState(false);
-	const [font, setFont] = React.useState(props.settings.font);
+	const { onCloseSettingsModal, settingsModalOpen } = props;
+
+	const [brand, setBrand] = React.useState(settings.brand); 
+	const [brandError/*, setBrandError*/] = React.useState(false);
+	const [font, setFont] = React.useState(settings.font);
 	const [fontError/*, setFontError*/] = React.useState(false);
-	const [padding, setPadding] = React.useState(props.settings.padding);
+	const [padding, setPadding] = React.useState(settings.padding);
 
-	const [layout, setLayout] = React.useState(props.settings.layout);
-	const [isLayoutColumn, setIsLayoutColumn] = React.useState(props.settings.layout === "columns");
-	const [layoutNbPerRow, setLayoutNbPerRow] = React.useState(props.settings.layoutNbPerRow);
-	const [layoutNbPerRowArray, setLayoutNbPerRowArray] = React.useState([...Array(props.settings.layoutNbPerRow).keys()]);
-	const [textAlignment, setTextAlignment] = React.useState(props.settings.textAlignment);
-	const [leftColumnWidth, setLeftColumnWidth] = React.useState(props.settings.leftColumnWidth);
-	const [seperatorWidth, setSeperatorWidth] = React.useState(props.settings.seperatorWidth);
+	const [layout, setLayout] = React.useState(settings.layout);
+	const [isLayoutColumn, setIsLayoutColumn] = React.useState(settings.layout === "columns");
+	const [layoutNbPerRow, setLayoutNbPerRow] = React.useState(settings.layoutNbPerRow);
+	const [layoutNbPerRowArray, setLayoutNbPerRowArray] = React.useState([...Array(settings.layoutNbPerRow).keys()]);
+	const [textAlignment, setTextAlignment] = React.useState(settings.textAlignment);
+	const [leftColumnWidth, setLeftColumnWidth] = React.useState(settings.leftColumnWidth);
+	const [seperatorWidth, setSeperatorWidth] = React.useState(settings.seperatorWidth);
 	
-	const handleSoapBrandChange = (event) => {
-		setSoapBrand(event.target.value);
-		settings.brand = event.target.value;
+	const handleBrandChange = (event) => {
+		setBrand(event.target.value);
 		updateSettings();
 	};
 	const handleFontChange = (event) => {
 		setFont(event.target.value);
-		settings.font = event.target.value;
 		updateSettings();
 	};
 	const handleLayoutChange = (event) => {
 		setLayout(event.target.value);
 		setIsLayoutColumn(event.target.value === "columns");
-		settings.layout = event.target.value;
 		updateSettings();
 	};
 	const handlePaddingChange = (value, property) => {
 		padding[property] = value;
 		const newPadding = {...padding};
 		setPadding(newPadding);
-		settings.padding = newPadding;
 		updateSettings();
 	};
 	const handleLeftColumnWidthChange = (event) => {
 		setLeftColumnWidth(event.target.value/100);
-		settings.leftColumnWidth = event.target.value/100;
 		updateSettings();
 	};
 	const handleSeperatorWidthChange = (event) => {
 		setSeperatorWidth(event.target.value);
-		settings.seperatorWidth = event.target.value;
 		updateSettings();
 	};
 	const handleTextAlignmentChange = (event) => {
 		setTextAlignment(event.target.value);
-		settings.textAlignment = event.target.value;
 		updateSettings();
 	};
 	const handleLayoutNbPerRowChange = (event) => {
@@ -88,22 +87,38 @@ export default function SettingsModal(props) {
 		if (valid) {
 			setLayoutNbPerRow(val);
 			setLayoutNbPerRowArray([...Array(val).keys()]);
-			settings.layoutNbPerRow = val;
 			updateSettings();
 		}
 	};
 
 	const updateSettings = () => {
 		// setSettings({...settings});
+		// settings.brand = event.target.value;
+		// settings.font = event.target.value;
+		// settings.layout = event.target.value;
+		// settings.padding = newPadding;
+		// settings.leftColumnWidth = event.target.value/100;
+		// settings.seperatorWidth = event.target.value;
+		// settings.textAlignment = event.target.value;
 	}
 
 	const handleClose = () => {
-		props.onClose();
-		props.saveSettings(settings);
+		const settingsData = {
+			brand,
+			font,
+			layout,
+			padding,
+			leftColumnWidth,
+			seperatorWidth,
+			textAlignment,
+			layoutNbPerRow,
+		};
+		dispatch(editSettings(settingsData));
+		onCloseSettingsModal();
 	};
 
 	return (
-		<Dialog open={props.open} scroll="body" maxWidth={'1000px'}>
+		<Dialog open={settingsModalOpen} scroll="body" maxWidth={'1000px'}>
 			<DialogContent dividers={false}>
 				<Box className="modalBox">
 					<FormControl fullWidth={true} component="form" className="form">
@@ -128,11 +143,9 @@ export default function SettingsModal(props) {
 												{layoutNbPerRowArray.map(i => (
 													<Label
 														key={`label-${i}`}
-														settings={settings}
 														layout="columns"
 														soapName="Soap name"
 														ingredients="Ingredients: water, coconut oil, palm oil, lye, avocado oil, canola oil, castor oil, olive oil, safflower oil, cocoa butter, fragrance(s), colorant(s)." 
-														brand={settings.brand}
 														phrase="Some catchy phrase"
 														demo={true}
 													/>
@@ -161,9 +174,9 @@ export default function SettingsModal(props) {
 														label="Soap Brand"
 														size="small"
 														helperText=""
-														value={soapBrand}
-														error={soapBrandError}
-														onChange={handleSoapBrandChange}
+														value={brand}
+														error={brandError}
+														onChange={handleBrandChange}
 														style={{ width: '100%' }}
 													/>
 												</Grid>
@@ -276,11 +289,9 @@ export default function SettingsModal(props) {
 										<Grid item xs={12}>
 											<FormControlLabel value="wide" control={<Radio />} label="Wide Row Layout" />
 											<Label
-												settings={settings}
 												layout="wide"
 												soapName="Soap name"
 												ingredients="Ingredients: water, coconut oil, palm oil, lye, avocado oil, canola oil, castor oil, olive oil, safflower oil, cocoa butter, fragrance(s), colorant(s)." 
-												brand={settings.brand}
 												phrase="Some catchy phrase"
 												demo={true}
 											/>
@@ -307,9 +318,9 @@ export default function SettingsModal(props) {
 														label="Soap Brand"
 														size="small"
 														helperText=""
-														value={soapBrand}
-														error={soapBrandError}
-														onChange={handleSoapBrandChange}
+														value={brand}
+														error={brandError}
+														onChange={handleBrandChange}
 														style={{ width: '100%' }}
 													/>
 												</Grid>
