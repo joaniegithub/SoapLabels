@@ -5,7 +5,7 @@ import reducer from './reducer';
 function saveToLocalStorage(state) {
 	try {
 		const serialisedState = JSON.stringify(state);
-		localStorage.setItem("persistantState", serialisedState);
+		localStorage.setItem("SoapLabelsState", serialisedState);
 	} catch (e) {
 		console.warn(e);
 	}
@@ -15,7 +15,7 @@ function saveToLocalStorage(state) {
 // invalid output must be undefined
 function loadFromLocalStorage() {
 	try {
-		const serialisedState = localStorage.getItem("persistantState");
+		const serialisedState = localStorage.getItem("SoapLabelsState");
 		if (serialisedState === null) return undefined;
 			return JSON.parse(serialisedState);
 	} catch (e) {
