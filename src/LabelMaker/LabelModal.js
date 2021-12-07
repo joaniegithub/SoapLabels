@@ -11,6 +11,7 @@ import { DialogContent } from '@mui/material';
 import { Grid } from '@mui/material';
 import { IconButton } from '@mui/material';
 import { Tooltip } from '@mui/material';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 import CloseIcon from '@mui/icons-material/Close';
 import BackspaceIcon from '@mui/icons-material/Backspace';
@@ -56,9 +57,10 @@ export default function LabelModal(props) {
 	const [translateFrench, setTranslateFrench] = React.useState(false);
 	const [soapName, setSoapName] = React.useState('');
 	const [soapNameError, setSoapNameError] = React.useState(false);
+	const [soapPhrase, setSoapPhrase] = React.useState('');
+	const [soapDate, setSoapDate] = React.useState(new Date());
 	const [soapIngredients, setSoapIngredients] = React.useState('');
 	const [soapCode, setSoapCode] = React.useState('');
-	const [soapPhrase, setSoapPhrase] = React.useState('');
 	const [soapFragrances, setSoapFragrances] = React.useState('');
 	const [soapColorants, setSoapColorants] = React.useState('');
 
@@ -81,6 +83,10 @@ export default function LabelModal(props) {
 		const _soapName = event.target.value;
 		setSoapName(useThinSpace ? _soapName.replaceAll(" ", " ") : _soapName.replaceAll(" ", " "));
 	};
+	// const handleSoapDateChange = (event) => {
+	// 	const _soapDate = event.target.value;
+	// 	setSoapDate(_soapDate);
+	// };
 	const handleSoapPhraseChange = (event) => {
 		setSoapPhrase(event.target.value);
 	};
@@ -106,6 +112,7 @@ export default function LabelModal(props) {
 			// name, ingredients, soapCode, soapIngredients, soapFragrances, soapColorants, phrase, translateFrench
 			saveLabel(
 				soapName, 
+				soapDate.getTime(), 
 				ingredientsCodeOutput, 
 				soapCode, 
 				soapIngredients, 
@@ -171,6 +178,7 @@ export default function LabelModal(props) {
 	React.useEffect(() => {
 		if(currentSoapLabel && currentSoapLabel.name && currentSoapLabel.ingredients) {
 			setSoapName(currentSoapLabel.name);
+			setSoapDate(new Date(currentSoapLabel.date));
 			setSoapPhrase(currentSoapLabel.phrase);
 			setSoapCode(currentSoapLabel.soapCode);
 			setSoapIngredients(currentSoapLabel.soapIngredients || currentSoapLabel.ingredients);
@@ -180,6 +188,7 @@ export default function LabelModal(props) {
 			setUseSoapCalcRecipe(currentSoapLabel.useSoapCalcRecipe && !!currentSoapLabel.soapCode);
 		} else {
 			setSoapName("");
+			setSoapDate(new Date());
 			setSoapPhrase("");
 			setSoapCode("");
 			setSoapIngredients("");
@@ -230,6 +239,8 @@ export default function LabelModal(props) {
 									onChange={handleSoapNameChange}
 									style={{ width: '100%' }}
 								/>
+							</Grid>
+							<Grid item xs={6}>
 								<FormControlLabel 
 									control={<Checkbox 
 									checked={useThinSpace}
@@ -245,6 +256,20 @@ export default function LabelModal(props) {
 									value={soapPhrase}
 									onChange={handleSoapPhraseChange}
 									style={{ width: '100%' }}
+								/>
+							</Grid>
+							<Grid item xs={6}>
+								<DesktopDatePicker
+									label="Soap Date"
+									inputFormat="MM/dd/yyyy"
+									variant="contained"
+									value={soapDate}
+									onChange={(newValue) => {
+									  setSoapDate(newValue);
+									}}
+									renderInput={(params) => 
+										<TextField {...params} size="small" style={{ width: '100%' }} />
+									}
 								/>
 							</Grid>
 							{useSoapCalcRecipe ? (
@@ -339,9 +364,7 @@ export default function LabelModal(props) {
 						{arrPerRow.map(i => (
 							<Label
 								key={`label-${i}`}
-								soapName={soapName}
-								ingredients={ingredientsCodeOutput}
-								phrase={soapPhrase}
+								soapLabel={{soapName, ingredients: ingredientsCodeOutput, soapPhrase, soapDate}}
 							/>
 						))}
 					</Grid>

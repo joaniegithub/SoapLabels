@@ -3,10 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DateAdapter from '@mui/lab/AdapterDateFns';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+	<LocalizationProvider dateAdapter={DateAdapter}>
+		<App />
+  	</LocalizationProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

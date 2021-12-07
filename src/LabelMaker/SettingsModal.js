@@ -91,6 +91,13 @@ export default function SettingsModal(props) {
 		}
 	};
 
+	const demoSoap = {
+		soapName: "Soap name", 
+		ingredients: "Ingredients: water, coconut oil, palm oil, lye, avocado oil, canola oil, castor oil, olive oil, safflower oil, cocoa butter, fragrance(s), colorant(s).",
+		phrase: "Some catchy phrase",
+		soapDate: new Date(),
+	};
+
 	const updateSettings = () => {
 		// setSettings({...settings});
 		// settings.brand = event.target.value;
@@ -144,9 +151,7 @@ export default function SettingsModal(props) {
 													<Label
 														key={`label-${i}`}
 														layout="columns"
-														soapName="Soap name"
-														ingredients="Ingredients: water, coconut oil, palm oil, lye, avocado oil, canola oil, castor oil, olive oil, safflower oil, cocoa butter, fragrance(s), colorant(s)." 
-														phrase="Some catchy phrase"
+														soapLabel={demoSoap}
 														demo={true}
 													/>
 												))}
@@ -290,9 +295,7 @@ export default function SettingsModal(props) {
 											<FormControlLabel value="wide" control={<Radio />} label="Wide Row Layout" />
 											<Label
 												layout="wide"
-												soapName="Soap name"
-												ingredients="Ingredients: water, coconut oil, palm oil, lye, avocado oil, canola oil, castor oil, olive oil, safflower oil, cocoa butter, fragrance(s), colorant(s)." 
-												phrase="Some catchy phrase"
+												soapLabel={demoSoap}
 												demo={true}
 											/>
 										</Grid>

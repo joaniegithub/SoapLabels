@@ -39,10 +39,11 @@ export default function LabelsList(props) {
 	}
 	
 	// (New / Edit)
-	const saveLabel = (name, ingredients, soapCode, soapIngredients, soapFragrances, soapColorants, phrase, useSoapCalcRecipe, translateFrench) => {
+	const saveLabel = (name, date, ingredients, soapCode, soapIngredients, soapFragrances, soapColorants, phrase, useSoapCalcRecipe, translateFrench) => {
 		const soapLabelData = {
 			uid: new Date().getTime(), 
 			name, 
+			date, 
 			ingredients, 
 			soapCode, 
 			soapIngredients, 

@@ -27,6 +27,7 @@
 	font-size: 12px;
 	line-height: 16px;
 	margin: 10px 0 10px;
+	font-weight: 300;
 }
 .labelWideRowSoapBrand {
 	font-family: "Shadows Into Light";
@@ -44,4 +45,10 @@
 .labelWideRowSoapBrand:last-child,
 .labelWideRowSoapPhrase:last-child {
 	margin-bottom: 0;
+}
+.labelWideRowSoapDate {
+	font-family: "Lato";
+	font-size: 10px;
+	line-height: 14px;
+	margin: 10px 0 0;
 }

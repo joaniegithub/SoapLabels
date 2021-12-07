@@ -7,7 +7,7 @@ import { useSettings } from '../../store/actions';
 export default function Label(props) {
 	const settings = useSettings();
 
-	const {layout: layoutProps, demo: demoProps, soapName, ingredients, phrase} = props;
+	const {layout: layoutProps, demo: demoProps, soapLabel} = props;
 
 	const {pt, pb, pl, pr, pl1, pr1, pl2, pr2} = settings.padding;
 	const layout = layoutProps || settings.layout || "columns";
@@ -23,6 +23,9 @@ export default function Label(props) {
 	const styleAlign = {textAlign: textAlignment};
 	const styleBackgroundColor = {backgroundColor:  demo ? '#f8f8f8' : 'transparent'};
 
+	const dateOptions = {year: "numeric", month: "long", day: "2-digit"};
+	const soapDate = soapLabel.soapDate ? soapLabel.soapDate.toLocaleDateString("fr-FR", dateOptions) : "";
+
 	return (
 		<React.Fragment>
 			{layout === "columns" ? (
@@ -35,10 +38,11 @@ export default function Label(props) {
 					paddingRight={pr+'px'}
 					style={styleBackgroundColor}
 				>
-					<p style={styleFontAlign} className="labelSoapName">{soapName}</p>
-					<p style={styleAlign} className="labelSoapIngredients">{ingredients}</p>
+					<p style={styleFontAlign} className="labelSoapName">{soapLabel.soapName}</p>
+					<p style={styleAlign} className="labelSoapIngredients">{soapLabel.ingredients}</p>
 					{brand && (<p style={styleAlign} className="labelSoapBrand">{brand}</p>)}
-					{phrase && (<p style={styleAlign} className="labelSoapPhrase">{phrase}</p>)}
+					{soapLabel.phrase && (<p style={styleAlign} className="labelSoapPhrase">{soapLabel.phrase}</p>)}
+					{soapLabel.soapDate && (<p className="labelSoapDate">{soapDate}</p>)}
 				</Grid>
 			) : (
 				<Grid xs={12} item
@@ -53,7 +57,8 @@ export default function Label(props) {
 						paddingRight={pr1+'px'}
 						className="labelWideRowGridItemLeft"
 					>
-						<p className="labelWideRowSoapIngredients">{ingredients}</p>
+						<p className="labelWideRowSoapIngredients">{soapLabel.ingredients}</p>
+						{soapLabel.soapDate && (<p className="labelWideRowSoapDate">{soapDate}</p>)}
 					</Grid>
 					<Grid item 
 						xs={12*(1-leftColumnWidth)} 
@@ -63,8 +68,8 @@ export default function Label(props) {
 						style={{borderLeft: `${seperatorWidth}px solid #000`}}
 					>
 						{brand && (<p className="labelWideRowSoapBrand">{brand}</p>)}
-						<p style={styleFont} className="labelWideRowSoapName">{soapName}</p>
-						{phrase && (<p className="labelWideRowSoapPhrase">{phrase}</p>)}
+						<p style={styleFont} className="labelWideRowSoapName">{soapLabel.soapName}</p>
+						{soapLabel.phrase && (<p className="labelWideRowSoapPhrase">{soapLabel.phrase}</p>)}
 					</Grid>
 				</Grid>
 			)}

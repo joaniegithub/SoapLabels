@@ -50,9 +50,7 @@ export default function LabelsPrintView(props) {
 					return (
 						<Label
 							key={`labelPreview-${index}`}
-							soapName={label.name} 
-							ingredients={label.ingredients} 
-							phrase={label.phrase}
+							soapLabel={label}
 						/>
 					);
 				})}
