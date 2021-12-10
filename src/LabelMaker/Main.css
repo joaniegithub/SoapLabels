@@ -96,7 +96,7 @@
 .footer {
 	width: 838px !important;
 	padding: 10px 0 20px 0 !important;
-	display: flex;
+	display: flex !important;
 	flex-direction: row;
 	justify-content: space-between;
 }
