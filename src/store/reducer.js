@@ -1,6 +1,6 @@
 import * as constants from './constants';
 
-const defaultSettings = {
+export const defaultSettings = {
 	"font": "Shadows Into Light",
 	"brand": "",
 	"layout": "columns",
@@ -8,6 +8,7 @@ const defaultSettings = {
 	"textAlignment": "left",
 	"leftColumnWidth": 0.65,
 	"seperatorWidth": 5,
+	"pagePadding": {'pt': 36, 'pl': 36},
 	"padding": {'pt': 20, 'pb': 20, 'pl': 20, 'pr': 20, 'pl1': 50, 'pr1': 50, 'pl2': 10, 'pr2': 20},
 	"translateFrench": false,
 };

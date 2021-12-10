@@ -96,12 +96,19 @@
 .footer {
 	width: 838px !important;
 	padding: 10px 0 20px 0 !important;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+.footerLinks {
+	display: block;
 }
 .footerCopyright {
 	font-family: "Lato";
 	font-size: 12px;
 	font-weight: bold;
 	text-align: right;
+	display: block;
 }
 
 .gridItemClose {

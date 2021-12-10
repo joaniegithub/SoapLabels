@@ -2,11 +2,13 @@ import './Main.css';
 import * as React from 'react';
 import { Container } from '@mui/material';
 import { IconButton } from '@mui/material';
+import { Button } from '@mui/material';
 import Cookies from 'universal-cookie';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import SoapLabels from './SoapLabels';
+import PrivacyPolicyTermsConditions from './PrivacyPolicyTermsConditions';
 
 const images = [
 	'arab_tile',
@@ -64,6 +66,14 @@ export default function Main() {
 	React.useEffect(() => {
 		setMainClassName(`main main_${images[bgTileIndex]}`);
 	}, [bgTileIndex]);
+	const [privacyTermsModalOpen, setPrivacyTermsModalOpen] = React.useState(false);
+	// Settings Modal
+	const handlePrivacyTermsModalOpen = () => {
+		setPrivacyTermsModalOpen(true);
+	};
+	const handlePrivacyTermsModalClose = () => {
+		setPrivacyTermsModalOpen(false);
+	}
 
 	return (
 		<div className={mainClassName}>
@@ -78,8 +88,15 @@ export default function Main() {
 				<SoapLabels/>
 			</Container>
 			<Container className="footer noPrint">
+				<div className="footerLinks">
+					<Button onClick={handlePrivacyTermsModalOpen}>Privacy Policy and Terms</Button>
+				</div>
 				<p className="footerCopyright">Soap Labels @2021 Joanie Lessnick</p>
 			</Container>
+			<PrivacyPolicyTermsConditions
+				privacyTermsModalOpen={privacyTermsModalOpen}
+				onClosePrivacyTermsModal={handlePrivacyTermsModalClose}
+			/>
 		</div>
 	);
 }

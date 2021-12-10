@@ -26,6 +26,7 @@ const theme = createTheme({
 		button: {
 		  fontSize: '1rem',
 		  fontWeight: '600',
+		  textTransform: 'none',
 		},
 	},
 });

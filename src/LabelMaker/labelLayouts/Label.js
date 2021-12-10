@@ -23,8 +23,8 @@ export default function Label(props) {
 	const styleAlign = {textAlign: textAlignment};
 	const styleBackgroundColor = {backgroundColor:  demo ? '#f8f8f8' : 'transparent'};
 
-	const dateOptions = {year: "numeric", month: "long", day: "2-digit"};
-	const soapDate = soapLabel.soapDate ? soapLabel.soapDate.toLocaleDateString("fr-FR", dateOptions) : "";
+	const dateOptions = {year: "numeric", month: "long", day: "numeric"};
+	const soapDate = soapLabel.date ? new Date(soapLabel.date).toLocaleDateString("fr-FR", dateOptions) : "";
 
 	return (
 		<React.Fragment>
@@ -38,11 +38,11 @@ export default function Label(props) {
 					paddingRight={pr+'px'}
 					style={styleBackgroundColor}
 				>
-					<p style={styleFontAlign} className="labelSoapName">{soapLabel.soapName}</p>
+					<p style={styleFontAlign} className="labelSoapName">{soapLabel.name}</p>
 					<p style={styleAlign} className="labelSoapIngredients">{soapLabel.ingredients}</p>
 					{brand && (<p style={styleAlign} className="labelSoapBrand">{brand}</p>)}
 					{soapLabel.phrase && (<p style={styleAlign} className="labelSoapPhrase">{soapLabel.phrase}</p>)}
-					{soapLabel.soapDate && (<p className="labelSoapDate">{soapDate}</p>)}
+					{soapLabel.date && (<p className="labelSoapDate">{soapDate}</p>)}
 				</Grid>
 			) : (
 				<Grid xs={12} item
@@ -58,7 +58,7 @@ export default function Label(props) {
 						className="labelWideRowGridItemLeft"
 					>
 						<p className="labelWideRowSoapIngredients">{soapLabel.ingredients}</p>
-						{soapLabel.soapDate && (<p className="labelWideRowSoapDate">{soapDate}</p>)}
+						{soapLabel.date && (<p className="labelWideRowSoapDate">{soapDate}</p>)}
 					</Grid>
 					<Grid item 
 						xs={12*(1-leftColumnWidth)} 
@@ -68,7 +68,7 @@ export default function Label(props) {
 						style={{borderLeft: `${seperatorWidth}px solid #000`}}
 					>
 						{brand && (<p className="labelWideRowSoapBrand">{brand}</p>)}
-						<p style={styleFont} className="labelWideRowSoapName">{soapLabel.soapName}</p>
+						<p style={styleFont} className="labelWideRowSoapName">{soapLabel.name}</p>
 						{soapLabel.phrase && (<p className="labelWideRowSoapPhrase">{soapLabel.phrase}</p>)}
 					</Grid>
 				</Grid>

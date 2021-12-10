@@ -69,10 +69,10 @@ export default function LabelsPrintView(props) {
 
 	const isColumnLayout = layout === "columns";
 	const pagePadding = {
-		pt: Math.max(0, 20-settings.padding.pt)+'px',
-		pb: Math.max(0, 20-settings.padding.pb)+'px',
-		pl: Math.max(0, 20-(isColumnLayout ? settings.padding.pl : settings.padding.pl1))+'px',
-		pr: Math.max(0, 20-(isColumnLayout ? settings.padding.pr : settings.padding.pr2))+'px',
+		pt: Math.max(0, settings.pagePadding.pt-settings.padding.pt)+'px',
+		pb: Math.max(0, settings.pagePadding.pt-settings.padding.pb)+'px',
+		pl: Math.max(0, settings.pagePadding.pl-(isColumnLayout ? settings.padding.pl : settings.padding.pl1))+'px',
+		pr: Math.max(0, settings.pagePadding.pl-(isColumnLayout ? settings.padding.pr : settings.padding.pr2))+'px',
 	};
 
 	return (

@@ -92,6 +92,7 @@ export default function LabelsList(props) {
 	};
 	
 	let index = 0;
+	const dateOptions = {year: "numeric", month: "long", day: "numeric"};
 
 	return (
 		<React.Fragment>
@@ -105,6 +106,7 @@ export default function LabelsList(props) {
 				<Grid container spacing={0} className="soapLabelRows">
 					{soapLabels && soapLabels.length ? soapLabels.map(soapLabel => {
 						index++;
+						const soapDate = soapLabel.date ? new Date(soapLabel.date).toLocaleDateString("fr-FR", dateOptions) : "";
 						return(
 							<Grid
 								item xs={12}
@@ -113,6 +115,7 @@ export default function LabelsList(props) {
 							>
 								<span className="soapLabelRowName">{soapLabel.name} </span>
 								<div className="soapLabelButtons rightAbsoluteContainer" >
+									<span className="soapLabelRowDate">{soapDate} </span>
 									<QuantitySelector
 										quantity={soapLabel.quantity}
 										handleUpdateQty={(qty) => handleSoapLabelQtyChange(soapLabel, qty)}
