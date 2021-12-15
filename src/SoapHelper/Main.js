@@ -7,7 +7,8 @@ import Cookies from 'universal-cookie';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
-import SoapLabels from './SoapLabels';
+import SoapLabels from './SoapLabels/SoapLabels';
+import SoapOilsCalculator from './SoapOilsCalculator/SoapOilsCalculator';
 import PrivacyPolicyTermsConditions from './PrivacyPolicyTermsConditions';
 
 const images = [
@@ -26,7 +27,6 @@ const images = [
 	'new_year_background',
 	'regal',
 	'ripples',
-	'swirls',
 	'tree_bark',
 	'trees',
 ];
@@ -78,14 +78,15 @@ export default function Main() {
 	return (
 		<div className={mainClassName}>
 			<Container className="header noPrint wrapperForAbsolute">
-				<h1 className="mainTitle">Soap Labels</h1>
+				<h1 className="mainTitle">Soap Helper</h1>
 				<div className="bgSwitcherContainer rightAbsoluteContainer">
 					<IconButton onClick={handlePreviousBg}><ArrowBackIosNewIcon/></IconButton>
 					<IconButton onClick={handleNextBg}><ArrowForwardIosIcon/></IconButton>
 				</div>
 			</Container>
 			<Container className="container">
-				<SoapLabels/>
+				{/*<SoapLabels/>*/}
+				<SoapOilsCalculator/>
 			</Container>
 			<Container className="footer noPrint">
 				<div className="footerLinks">

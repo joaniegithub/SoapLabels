@@ -1,18 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DateAdapter from '@mui/lab/AdapterDateFns';
+import App from "./App";
+import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+import DateAdapter from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import React from "react";
+import ReactDOM from "react-dom";
 
 ReactDOM.render(
-  <React.StrictMode>
 	<LocalizationProvider dateAdapter={DateAdapter}>
 		<App />
-  	</LocalizationProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+	</LocalizationProvider>,
+	document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,45 +1,41 @@
-import './App.css';
-import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import Main from './LabelMaker/Main';
-import store from './store/'
-import { Provider } from 'react-redux'
+import "./App.css";
+import Main from "./SoapHelper/Main";
+import CssBaseline from "@mui/material/CssBaseline";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import * as React from "react";
 
 const theme = createTheme({
 	typography: {
 		fontFamily: [
-			'Lato',
-			'Arial',
-			'Shadows Into Light',
-			'-apple-system',
-			'BlinkMacSystemFont',
+			"Lato",
+			"Arial",
+			"Shadows Into Light",
+			"-apple-system",
+			"BlinkMacSystemFont",
 			'"Segoe UI"',
-			'Roboto',
+			"Roboto",
 			'"Helvetica Neue"',
-			'Arial',
-			'sans-serif',
+			"Arial",
+			"sans-serif",
 			'"Apple Color Emoji"',
 			'"Segoe UI Emoji"',
 			'"Segoe UI Symbol"',
-		].join(','),
+		].join(","),
 		button: {
-		  fontSize: '1rem',
-		  fontWeight: '600',
-		  textTransform: 'none',
+			fontSize: "1rem",
+			fontWeight: "600",
+			textTransform: "none",
 		},
 	},
 });
 
 function App() {
-  return (
-    <Provider store={store}>
+	return (
 		<ThemeProvider theme={theme}>
 			<CssBaseline />
 			<Main />
-    	</ThemeProvider>
-	</Provider>
-  );
+		</ThemeProvider>
+	);
 }
 
 export default App;

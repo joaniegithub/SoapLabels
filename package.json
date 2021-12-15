@@ -6,8 +6,10 @@
   "dependencies": {
     "@date-io/date-fns": "^2.11.0",
     "@date-io/moment": "^2.11.0",
+    "@devexpress/dx-react-chart-material-ui": "^2.7.6",
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
+    "@material-table/core": "next",
     "@material-ui/core": "^4.12.3",
     "@mui/icons-material": "^5.2.0",
     "@mui/lab": "^5.0.0-alpha.59",
