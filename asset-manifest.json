@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/SoapLabels/static/css/main.2b28590c.chunk.css",
-    "main.js": "/SoapLabels/static/js/main.b179167d.chunk.js",
-    "main.js.map": "/SoapLabels/static/js/main.b179167d.chunk.js.map",
+    "main.css": "/SoapLabels/static/css/main.8dabc55d.chunk.css",
+    "main.js": "/SoapLabels/static/js/main.9b062c46.chunk.js",
+    "main.js.map": "/SoapLabels/static/js/main.9b062c46.chunk.js.map",
     "runtime-main.js": "/SoapLabels/static/js/runtime-main.8031ba28.js",
     "runtime-main.js.map": "/SoapLabels/static/js/runtime-main.8031ba28.js.map",
     "static/js/2.3a67f375.chunk.js": "/SoapLabels/static/js/2.3a67f375.chunk.js",
@@ -10,14 +10,14 @@
     "static/js/3.bb96ec74.chunk.js": "/SoapLabels/static/js/3.bb96ec74.chunk.js",
     "static/js/3.bb96ec74.chunk.js.map": "/SoapLabels/static/js/3.bb96ec74.chunk.js.map",
     "index.html": "/SoapLabels/index.html",
-    "static/css/main.2b28590c.chunk.css.map": "/SoapLabels/static/css/main.2b28590c.chunk.css.map",
+    "static/css/main.8dabc55d.chunk.css.map": "/SoapLabels/static/css/main.8dabc55d.chunk.css.map",
     "static/js/2.3a67f375.chunk.js.LICENSE.txt": "/SoapLabels/static/js/2.3a67f375.chunk.js.LICENSE.txt",
     "static/media/Layout.css": "/SoapLabels/static/media/trees.0d78b7bf.png"
   },
   "entrypoints": [
     "static/js/runtime-main.8031ba28.js",
     "static/js/2.3a67f375.chunk.js",
-    "static/css/main.2b28590c.chunk.css",
-    "static/js/main.b179167d.chunk.js"
+    "static/css/main.8dabc55d.chunk.css",
+    "static/js/main.9b062c46.chunk.js"
   ]
 }
