@@ -1,6 +1,4 @@
-import "./SettingsModal.css";
-import Label from "./labelLayouts/Label";
-import { editSettings, useSettings } from "./store/actions";
+import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box } from "@mui/material";
 import { Select } from "@mui/material";
@@ -19,8 +17,32 @@ import { IconButton } from "@mui/material";
 // import BackspaceIcon from '@mui/icons-material/Backspace';
 // import SaveIcon from '@mui/icons-material/Save';
 import { Slider } from "@mui/material";
+import Label from "SoapHelper/SoapLabels/labelLayouts/Label";
+import { editSettings, useSettings } from "SoapHelper/SoapLabels/store/actions";
+import {
+	rightAbsoluteContainer,
+	secondTitle,
+	gridItemClose,
+	modalBox,
+} from "SoapHelper/styles/styles";
 import * as React from "react";
 import { useDispatch } from "react-redux";
+
+const styles = () => ({
+	gridItemClose,
+	secondTitle,
+	// wrapperForAbsolute: {
+	// 	...wrapperForAbsolute,
+	// 	...noPrint,
+	// },
+	modalBox,
+	gridLayoutsContainer: {
+		maxWidth: "initial !important",
+	},
+	gridItemLayout: {
+		marginTop: "10px !importan",
+	},
+});
 
 const sliderStyle = { marginLeft: 12, marginRight: 12, width: "auto" };
 const sliderPaddingProperties = {
@@ -29,11 +51,11 @@ const sliderPaddingProperties = {
 	// marks: [{value: 10, label: '10'}, {value: 100, label: '100'}]
 };
 
-export default function SettingsModal(props) {
+const SettingsModal = (props) => {
 	const dispatch = useDispatch();
 	const settings = useSettings();
 
-	const { onCloseSettingsModal, settingsModalOpen } = props;
+	const { classes, onCloseSettingsModal, settingsModalOpen } = props;
 
 	const [brand, setBrand] = React.useState(settings.brand);
 	const [brandError /*, setBrandError*/] = React.useState(false);
@@ -264,25 +286,29 @@ export default function SettingsModal(props) {
 	return (
 		<Dialog open={settingsModalOpen} scroll="body" maxWidth={"1000px"}>
 			<DialogContent dividers={false}>
-				<Box className="modalBox">
-					<FormControl
-						fullWidth={true}
-						component="form"
-						className="form"
-					>
+				<Box className={classes.modalBox}>
+					<FormControl fullWidth={true} component="form">
 						<RadioGroup
 							aria-label="layour"
 							value={layout}
 							onChange={handleLayoutChange}
 							name="radio-buttons-group"
 						>
-							<Grid container spacing={2} className="gridForm">
+							<Grid
+								container
+								spacing={2}
+								className={classes.gridForm}
+							>
 								<Grid item xs={6}>
-									<h2 className="secondTitle title">
+									<h2 className={classes.secondTitle}>
 										Settings
 									</h2>
 								</Grid>
-								<Grid item xs={6} className="gridItemClose">
+								<Grid
+									item
+									xs={6}
+									className={classes.gridItemClose}
+								>
 									<IconButton onClick={handleClose}>
 										<CloseIcon />
 									</IconButton>
@@ -291,7 +317,7 @@ export default function SettingsModal(props) {
 									<Grid
 										container
 										spacing={2}
-										className="gridLayoutsContainer"
+										className={classes.gridLayoutsContainer}
 									>
 										<Grid item xs={12}>
 											<FormControlLabel
@@ -451,11 +477,15 @@ export default function SettingsModal(props) {
 										)}
 									</Grid>
 								</Grid>
-								<Grid item xs={12} className="gridItemLayout">
+								<Grid
+									item
+									xs={12}
+									className={classes.gridItemLayout}
+								>
 									<Grid
 										container
 										spacing={2}
-										className="gridLayoutsContainer"
+										className={classes.gridLayoutsContainer}
 									>
 										<Grid item xs={12}>
 											<FormControlLabel
@@ -666,4 +696,6 @@ export default function SettingsModal(props) {
 			</DialogContent>
 		</Dialog>
 	);
-}
+};
+
+export default withStyles(styles, { name: "SettingsModal" })(SettingsModal);

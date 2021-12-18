@@ -1,23 +1,3 @@
-import { colors } from "../SoapOilsCalculator";
-import {
-	fattyAcids,
-	properties,
-	propertiesIodineINS,
-	idealProperties,
-} from "../SoapOilsCalculator";
-import "../SoapOilsCalculator.css";
-import { oilsData } from "../data/oilsData";
-import "./OilsStatsChartsProps";
-import {
-	format,
-	Line,
-	LinePoint,
-	LineWithPoint,
-	TitleText,
-	ValueLabel,
-	ValueLabelPercent,
-} from "./OilsStatsChartsProps";
-import OilsStatsTable from "./OilsStatsTable";
 import {
 	// 	ArgumentScale,
 	EventTracker, // 	HoverState,
@@ -33,6 +13,24 @@ import {
 	Tooltip,
 } from "@devexpress/dx-react-chart-material-ui";
 import { withStyles } from "@material-ui/core/styles";
+import {
+	fattyAcids,
+	properties,
+	propertiesIodineINS,
+	idealProperties,
+} from "SoapHelper/SoapOilsCalculator/SoapOilsCalculator";
+import { colors } from "SoapHelper/SoapOilsCalculator/SoapOilsCalculator";
+import {
+	format,
+	Line,
+	LinePoint,
+	LineWithPoint,
+	TitleText,
+	ValueLabel,
+	ValueLabelPercent,
+} from "SoapHelper/SoapOilsCalculator/components/OilsStatsChartsProps";
+import OilsStatsTable from "SoapHelper/SoapOilsCalculator/components/OilsStatsTable";
+import { useOilsData } from "SoapHelper/SoapOilsCalculator/store/actions";
 // import { scalePoint } from "d3-scale";
 // import { curveCatmullRom, curveStep, line, stackOffsetExpand } from "d3-shape";
 import * as React from "react";
@@ -64,47 +62,36 @@ const demoStyles = () => ({
 	},
 });
 
-const getOil = (oilName, oilNameId) => {
-	return { ...oilsData.filter((oil) => oil.name === oilName)[0], oilNameId };
-};
 const getPropertiesData = (
 	propertiesList,
 	selectedOilsList,
 	invisibleValue,
-	idealValues
+	idealValues,
+	maxValueVariable
 ) => {
 	const data = propertiesList.map((property, i) => {
-		const propertyData = { property: property.replace("acid_type_", "") };
-		selectedOilsList.forEach((oil) => {
-			if (property === "sat") {
-				const val =
-					(oil["acid_type_lauric"] +
-						oil["acid_type_myristic"] +
-						oil["acid_type_palmitic"] +
-						oil["acid_type_stearic"]) *
-					oil.p;
-				propertyData[oil.oilNameId] = val === 0 ? 0.0001 : val;
-			} else if (property == "unsat") {
-				const val =
-					(oil["acid_type_ricinoleic"] +
-						oil["acid_type_oleic"] +
-						oil["acid_type_linoleic"] +
-						oil["acid_type_linolenic"]) *
-					oil.p;
+		const propertyData = { property };
+		let maxValue = 0;
+		selectedOilsList.forEach((oil, i) => {
+			let val;
+			if (property == "unsat") {
+				val = (100 - oil["saturated"]) * (oil.percent / 100);
 				propertyData[oil.oilNameId] = val === 0 ? 0.0001 : val;
 			} else {
+				val = (oil[property] * oil.percent) / 100;
 				propertyData[oil.oilNameId] =
-					oil[property] === 0
-						? 0.0001
-						: (oil[property] * oil.p) / 100;
+					oil[property] === 0 ? 0.0001 : val;
 			}
+			maxValue += val;
 		});
+		console.log(maxValue);
 		if (idealValues) {
 			propertyData["idealMin"] = idealValues[property][0];
 			propertyData["ideal"] = idealValues[property][1];
 			propertyData["idealMax"] = idealValues[property][2];
 		}
-		propertyData["invisible"] = i === 0 ? 0 : invisibleValue;
+		propertyData["invisible"] =
+			i === 0 ? (maxValueVariable ? maxValue : invisibleValue) : 0;
 		return propertyData;
 	});
 	return data;
@@ -116,14 +103,14 @@ const combineAllData = (
 	dataIodineINSProperties
 ) => {
 	const allCombined = {
-		...combineData(dataFattyAcidsTmp, "acid_type_"),
+		...combineData(dataFattyAcidsTmp),
 		...combineData(dataPropertiesTmp),
 		...combineData(dataIodineINSProperties),
 		name: "total",
 	};
 	return allCombined;
 };
-const combineData = (dataList, suffix = "") => {
+const combineData = (dataList) => {
 	const combined = {};
 	dataList.forEach((propObj) => {
 		let propName;
@@ -138,7 +125,7 @@ const combineData = (dataList, suffix = "") => {
 			) {
 				propTotalValue += value;
 			} else if (key === "property") {
-				propName = suffix + value;
+				propName = value;
 			}
 		}
 		combined[propName] = Math.round(propTotalValue * 100) / 100;
@@ -148,7 +135,7 @@ const combineData = (dataList, suffix = "") => {
 
 const getHoverIndex = (target) => (target ? target.point : -1);
 
-const colorInvisible = "#fff";
+const colorInvisible = "rgba(255,255,255,0)";
 const colorIdealInterval = "#bbb";
 const colorIdeal = "#999";
 const colorTotal = "#000";
@@ -169,8 +156,8 @@ const OilsStatsCharts = (props) => {
 	const [dataIodineINSProperties, setdataIodineINSProperties] =
 		React.useState(null);
 
-	const chartFattyAcidsTitle = `Fatty Acids Profile Per Oil`;
-	const chartPropertiesTitle = `Properties Per Oil`;
+	const chartFattyAcidsTitle = `Fatty Acids Profile for`;
+	const chartPropertiesTitle = `Properties for`;
 	// const chartTitle =
 	// 	view === "fatty" ? chartFattyAcidsTitle : chartPropertiesTitle;
 	// const chartData = view === "fatty" ? dataFatty : dataProperties;
@@ -184,12 +171,13 @@ const OilsStatsCharts = (props) => {
 			oil.oilNameId = oilNameId;
 			return oilNameId;
 		});
-		console.log(_selectedOilsId);
 		setselectedOilsId(_selectedOilsId);
 		const dataFattyAcidsTmp = getPropertiesData(
 			fattyAcids,
 			selectedOils,
-			1.05
+			105,
+			undefined,
+			true
 		);
 		const dataPropertiesTmp = getPropertiesData(
 			properties,
@@ -208,7 +196,6 @@ const OilsStatsCharts = (props) => {
 			dataPropertiesTmp,
 			dataIodineINSProperties
 		);
-		console.log(selectedOilTotal);
 
 		setdataFattyAcids(dataFattyAcidsTmp);
 		setdataProperties(dataPropertiesTmp);
@@ -233,7 +220,6 @@ const OilsStatsCharts = (props) => {
 	React.useEffect(() => {
 		setDoRender(false);
 		setcomputedSelectedOils(null);
-		console.log("selectedOils changed");
 		if (selectedOils && selectedOils.length) {
 			updateData();
 		}
@@ -248,8 +234,8 @@ const OilsStatsCharts = (props) => {
 	) {
 		return null;
 	}
-	console.log(dataFattyAcids);
-	console.log(dataProperties);
+	// console.log(dataFattyAcids);
+	// console.log(dataProperties);
 	// console.log(stacksIodineINS);
 	//const formatTooltip = format('.1f');
 
@@ -274,7 +260,6 @@ const OilsStatsCharts = (props) => {
 								name="invisible"
 								valueField="invisible"
 								argumentField="property"
-								seriesComponent={LineWithPoint}
 								color={colorInvisible}
 							/>
 							<AreaSeries
@@ -301,6 +286,10 @@ const OilsStatsCharts = (props) => {
 							/>
 							{computedSelectedOils.map((oil, id) => {
 								const oilValue = selectedOilsId[id];
+								const color =
+									oil.color >= 0
+										? colors[oil.color % colors.length]
+										: colors[id % colors.length];
 								return (
 									<AreaSeries
 										key={oil.name}
@@ -309,12 +298,12 @@ const OilsStatsCharts = (props) => {
 										argumentField="property"
 										// seriesComponent={Line}
 										// pointComponent={LinePoint}
-										color={colors[id % colors.length]}
+										color={color}
 									/>
 								);
 							})}
 							<Title
-								text={chartPropertiesTitle}
+								text={`${chartPropertiesTitle} ${selectedOil.name}`}
 								textComponent={TitleText}
 							/>
 							<EventTracker />
@@ -333,7 +322,6 @@ const OilsStatsCharts = (props) => {
 								name="invisible"
 								valueField="invisible"
 								argumentField="property"
-								seriesComponent={LineWithPoint}
 								color={colorInvisible}
 							/>
 							<LineSeries
@@ -347,6 +335,10 @@ const OilsStatsCharts = (props) => {
 
 							{computedSelectedOils.map((oil, id) => {
 								const oilValue = selectedOilsId[id];
+								const color =
+									oil.color >= 0
+										? colors[oil.color % colors.length]
+										: colors[id % colors.length];
 								return (
 									<AreaSeries
 										key={oil.name}
@@ -354,7 +346,7 @@ const OilsStatsCharts = (props) => {
 										valueField={oilValue}
 										argumentField="property"
 										//seriesComponent={LineWithPoint}
-										color={colors[id % colors.length]}
+										color={color}
 									/>
 								);
 							})}
@@ -383,18 +375,22 @@ const OilsStatsCharts = (props) => {
 							/>
 							{computedSelectedOils.map((oil, id) => {
 								const oilValue = selectedOilsId[id];
+								const color =
+									oil.color >= 0
+										? colors[oil.color % colors.length]
+										: colors[id % colors.length];
 								return (
 									<AreaSeries
 										key={oil.name}
 										name={oil.name}
 										valueField={oilValue}
 										argumentField="property"
-										color={colors[id % colors.length]}
+										color={color}
 									/>
 								);
 							})}
 							<Title
-								text={chartFattyAcidsTitle}
+								text={`${chartFattyAcidsTitle} ${selectedOil.name}`}
 								textComponent={TitleText}
 							/>
 							<EventTracker />

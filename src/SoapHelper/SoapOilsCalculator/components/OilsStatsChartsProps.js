@@ -123,7 +123,7 @@ export const Item = withStyles(legendItemStyles, { name: "LegendItem" })(
 );
 export const ValueLabel = (props) => {
 	const { text } = props;
-	return <ValueAxis.Label {...props} text={`${Math.floor(text * 100)}%`} />;
+	return <ValueAxis.Label {...props} text={`${text}%`} />;
 };
 export const ValueLabelPercent = (props) => {
 	const { text } = props;
@@ -132,6 +132,9 @@ export const ValueLabelPercent = (props) => {
 const titleStyles = {
 	title: {
 		whiteSpace: "pre",
+		fontFamily: "Lato",
+		fontSize: "1.25em",
+		marginBottom: 0,
 	},
 };
 export const TitleText = withStyles(titleStyles)(({ classes, ...props }) => (

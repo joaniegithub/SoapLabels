@@ -1,16 +1,43 @@
-import "./LabelsPrintView.css";
-import SettingsModal from "./SettingsModal";
-import Label from "./labelLayouts/Label";
-import { useSoapLabels, useSettings } from "./store/actions";
+import { withStyles } from "@material-ui/core/styles";
 import InfoIcon from "@mui/icons-material/Info";
 import PrintIcon from "@mui/icons-material/Print";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { IconButton } from "@mui/material";
 import { Grid } from "@mui/material";
 import { Tooltip } from "@mui/material";
+import SettingsModal from "SoapHelper/SoapLabels/SettingsModal";
+import Label from "SoapHelper/SoapLabels/labelLayouts/Label";
+import {
+	useSoapLabels,
+	useSettings,
+} from "SoapHelper/SoapLabels/store/actions";
+import {
+	rightAbsoluteContainer,
+	secondTitle,
+	wrapperForAbsolute,
+	noPrint,
+} from "SoapHelper/styles/styles";
 import * as React from "react";
 
-export default function LabelsPrintView(props) {
+const styles = () => ({
+	rightAbsoluteContainer,
+	secondTitle,
+	wrapperForAbsolute: {
+		...wrapperForAbsolute,
+		...noPrint,
+	},
+	gridPrintLabels: {
+		boxShadow: "rgb(100 100 111 / 50%) 2px 2px 7px 0px",
+		display: "block",
+	},
+	gridPrintRow: {
+		display: "flex",
+		alignItems: "flex-start",
+	},
+});
+
+const LabelsPrintView = (props) => {
+	const { classes } = props;
 	const [settingsModalOpen, setSettingsModalOpen] = React.useState(false);
 
 	const soapLabels = useSoapLabels();
@@ -47,7 +74,10 @@ export default function LabelsPrintView(props) {
 
 		return rows.map((row, r) => {
 			return (
-				<div className="gridPrintRow" key={`labelPreviewRow-${r}`}>
+				<div
+					className={classes.gridPrintRow}
+					key={`labelPreviewRow-${r}`}
+				>
 					{row.map((label, l) => {
 						const index = r * _layoutNbPerRow + l;
 						return (
@@ -97,8 +127,8 @@ export default function LabelsPrintView(props) {
 				settingsModalOpen={settingsModalOpen}
 				onCloseSettingsModal={handleSettingsModalClose}
 			/>
-			<div className="wrapperForAbsolute noPrint">
-				<h2 className="secondTitle">
+			<div className={classes.wrapperForAbsolute}>
+				<h2 className={classes.secondTitle}>
 					Soap Labels Print Preview
 					<Tooltip
 						title="Lines are for visual aids only. And margins could render differently in your print settings."
@@ -109,7 +139,7 @@ export default function LabelsPrintView(props) {
 						</IconButton>
 					</Tooltip>
 				</h2>
-				<div className="rightAbsoluteContainer">
+				<div className={classes.rightAbsoluteContainer}>
 					<IconButton onClick={handleClickPrint}>
 						<PrintIcon />
 					</IconButton>
@@ -118,7 +148,7 @@ export default function LabelsPrintView(props) {
 					</IconButton>
 				</div>
 			</div>
-			<Grid item className="gridPrintLabels" {...pagePadding}>
+			<Grid item className={classes.gridPrintLabels} {...pagePadding}>
 				{soapLabels && soapLabels.length
 					? renderLabels(
 							soapLabels,
@@ -129,4 +159,6 @@ export default function LabelsPrintView(props) {
 			</Grid>
 		</React.Fragment>
 	);
-}
+};
+
+export default withStyles(styles, { name: "LabelsPrintView" })(LabelsPrintView);

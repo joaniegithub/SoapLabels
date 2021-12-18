@@ -1,60 +1,35 @@
-import * as constants from './constants';
-import { useSelector } from 'react-redux';
-
-
+import * as constants from "./constants";
+import { useSelector } from "react-redux";
 
 export const useSettings = () => {
 	return useSelector((state) => {
 		return state.settings;
 	});
 };
-export const useSoapLabels = () => {
+export const useReducedOilsData = () => {
 	return useSelector((state) => {
-		return state.soapLabels;
+		return state.reducedOilsData;
 	});
 };
-export const useCurrentSoapLabel = () => {
+export const useOilsData = () => {
 	return useSelector((state) => {
-		return state.currentSoapLabel;
+		return state.oilsData;
 	});
 };
 
-
-
-export const selectCurrentSoapLabel = (_currentSoapLabel) => {
-	// console.log(_currentSoapLabel, 'currentSoapLabel');
+export const setReducedOilsData = (_reducedOilsData, _reducedOilsDataIds) => {
+	// console.log(_reducedOilsData, 'reducedOilsData');
 	return {
-		type: constants.SET_CURRENT_SOAP_LABEL,
-		currentSoapLabel: _currentSoapLabel
-	};
-};
-export const addSoapLabel = (_soapLabelData) => {
-	// console.log(_soapLabels, 'soapLabels');
-	return {
-		type: constants.ADD_SOAP_LABEL,
-		soapLabel: _soapLabelData
-	};
-};
-export const editSoapLabel = (_soapLabelToEdit, _soapLabelData) => {
-	// console.log(_soapLabelData, _soapLabelToEdit, 'dispatchEditSoapLabel');
-	return {
-		type: constants.EDIT_CURRENT_SOAP_LABEL,
-		soapLabelData: _soapLabelData,
-		soapLabelToEdit: _soapLabelToEdit
-	};
-};
-export const deleteSoapLabel = (_soapLabelToDelete) => {
-	// console.log(_soapLabels, 'soapLabels');
-	return {
-		type: constants.DELETE_CURRENT_SOAP_LABEL,
-		soapLabelToDelete: _soapLabelToDelete
+		type: constants.SET_REDUCED_OILS_DATA,
+		reducedOilsData: _reducedOilsData,
+		reducedOilsDataIds: _reducedOilsDataIds,
 	};
 };
 
 export const editSettings = (_settingsData) => {
-	// console.log(_soapLabels, 'soapLabels');
+	// console.log(_settingsData, 'settings');
 	return {
 		type: constants.EDIT_SETTINGS,
-		settings: _settingsData
+		settings: _settingsData,
 	};
 };

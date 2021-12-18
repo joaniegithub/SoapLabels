@@ -1,9 +1,9 @@
+import { withStyles } from "@material-ui/core/styles";
 import {
 	fattyAcids,
 	properties,
 	propertiesIodineINS,
-} from "../SoapOilsCalculator";
-import { withStyles } from "@material-ui/core/styles";
+} from "SoapHelper/SoapOilsCalculator/SoapOilsCalculator";
 import * as React from "react";
 
 const styles = () => ({
@@ -17,8 +17,8 @@ const styles = () => ({
 	tableStats: {
 		listStyle: "none",
 		width: "100%",
-		margin: "0",
-		padding: "0",
+		padding: 0,
+		margin: 0,
 		borderTop: "#aaa solid 1px",
 	},
 	tableStatsRow: {
@@ -41,7 +41,7 @@ const styles = () => ({
 	tableTitle: {
 		fontWeight: 600,
 		fontSize: "12px",
-		padding: "0px 2px",
+		padding: "0px 2px 4px",
 	},
 });
 
@@ -61,13 +61,21 @@ const OilsStatsTable = (props) => {
 			</span>
 			<ul className={classes.tableStats}>
 				{properties.map((property, i) => {
+					if (property === "unsat") {
+						return;
+					}
 					index++;
+					let propValue = selectedOil ? selectedOil[property] : "";
+					if (property === "saturated") {
+						property = "sat : unsat";
+						propValue = `${selectedOil["saturated"]} : ${
+							100 - selectedOil["saturated"]
+						}`;
+					}
 					return (
 						<li className={getClss(index, i)} key={index}>
 							<span>{property}</span>
-							<span>
-								{selectedOil ? selectedOil[property] : ""}
-							</span>
+							<span>{propValue}</span>
 						</li>
 					);
 				})}
@@ -90,13 +98,9 @@ const OilsStatsTable = (props) => {
 					index++;
 					return (
 						<li className={getClss(index, i)} key={index}>
-							<span>{property.replace("acid_type_", "")}</span>
+							<span>{property}</span>
 							<span>
-								{selectedOil
-									? `${Math.round(
-											selectedOil[property] * 100
-									  )}%`
-									: ""}
+								{selectedOil ? selectedOil[property] : ""}
 							</span>
 						</li>
 					);

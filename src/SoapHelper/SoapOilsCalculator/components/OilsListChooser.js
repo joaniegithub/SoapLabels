@@ -1,6 +1,8 @@
-import { colors } from "../SoapOilsCalculator";
 import { withStyles } from "@material-ui/core/styles";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import InfoIcon from "@mui/icons-material/Info";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import SquareIcon from "@mui/icons-material/Square";
 import Checkbox from "@mui/material/Checkbox";
@@ -8,7 +10,14 @@ import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import ToggleButton from "@mui/material/ToggleButton";
 import { styled } from "@mui/system";
+import { colors } from "SoapHelper/SoapOilsCalculator/SoapOilsCalculator";
+import OilsModal from "SoapHelper/SoapOilsCalculator/components/OilsModal";
+import {
+	useOilsData,
+	useReducedOilsData,
+} from "SoapHelper/SoapOilsCalculator/store/actions";
 import * as React from "react";
 
 const cssCustomInputOutput = `
@@ -83,6 +92,7 @@ const styles = () => ({
 		justifyContent: "space-between",
 		alignItems: "center",
 		padding: "0 0 0 6px",
+		lineHeight: "48px",
 	},
 	iconBtn: {
 		width: "40px",
@@ -97,21 +107,13 @@ const styles = () => ({
 		maxWidth: 220,
 		width: 220,
 	},
-	// listItem: {
-	// 	padding: "0 !important",
-	// 	width: "100%",
-	// 	display: "flex",
-	// 	flexDirection: "row",
-	// 	justifyContent: "space-between",
-	// 	alignItems: "center",
-	// },
 	listItem: {
 		padding: "0 2px !important",
 		width: "100%",
 	},
 	listItemSelected: {
 		padding: "0 2px !important",
-		backgroundColor: "#ddd",
+		backgroundColor: "#eee",
 		width: "100%",
 	},
 	listItemIcon: {
@@ -140,27 +142,11 @@ const styles = () => ({
 		marginRight: "5px",
 	},
 	listItemSelectedIcon: {
-		minWidth: "28px",
+		minWidth: "28px !important",
 		width: "28px",
 		height: "28px",
 	},
 });
-
-/*
-Change Icon Color
-<HomeIcon />
-<HomeIcon color="primary" />
-<HomeIcon color="secondary" />
-<HomeIcon color="action" />
-<HomeIcon color="disabled" />
-<HomeIcon style={{ color: green[500] }} />
-<HomeIcon style={{ color: 'red' }} />
-Change Icon Size
-<HomeIcon fontSize="small" />
-<HomeIcon />
-<HomeIcon fontSize="large" />
-<HomeIcon style={{ fontSize: 40 }} />
-*/
 
 const getListItemClass = (classes, selectedOil, oil) => {
 	return selectedOil &&
@@ -171,11 +157,25 @@ const getListItemClass = (classes, selectedOil, oil) => {
 };
 
 const OilsListChooser = (props) => {
-	const { classes, checkedOilsNames, oilsData, onOilSelect } = props;
+	const { classes, checkedOilsNames, onOilSelect } = props;
+	const [oilsModalOpen, setOilsModalOpen] = React.useState(false);
 	const [checkedOils, setCheckedOils] = React.useState([]);
 	const [selectedOil, setSelectedOil] = React.useState(undefined);
 	const [showAllOils, setShowAllOils] = React.useState(true);
 	const [total, setTotal] = React.useState(0);
+	const [showFavoritesOnly, setShowFavoritesOnly] = React.useState(false);
+	const [oilsDataList, setOilsDataList] = React.useState([]);
+
+	const oilsData = useOilsData();
+	const reducedOilsData = useReducedOilsData();
+
+	// Oils Modal
+	const handleClickOpenOils = () => {
+		setOilsModalOpen(true);
+	};
+	const handleOilsModalClose = () => {
+		setOilsModalOpen(false);
+	};
 
 	const handleToggle = (oil) => () => {
 		const currentOil = checkedOils.find(
@@ -184,7 +184,7 @@ const OilsListChooser = (props) => {
 		const newChecked = [...checkedOils];
 
 		if (!currentOil || currentOil.length === 0) {
-			newChecked.push({ p: 0, ...oil });
+			newChecked.push({ percent: 0, ...oil });
 			checkedOilsNames.push(oil.name);
 		} else {
 			newChecked.splice(checkedOils.indexOf(currentOil), 1);
@@ -195,9 +195,10 @@ const OilsListChooser = (props) => {
 	};
 	const handleClick = (oil) => () => {
 		if (oil) {
-			console.log(oil);
 			setSelectedOil(oil);
-			onOilSelect([{ ...oil, p: 100 }]);
+			onOilSelect([
+				{ ...oil, percent: 100, color: checkedOils.indexOf(oil) },
+			]);
 		} else if (total === 100) {
 			setSelectedOil("total");
 			onOilSelect(checkedOils);
@@ -212,10 +213,9 @@ const OilsListChooser = (props) => {
 	const proportionChanged = (e, oil) => {
 		const val = e.target.value;
 		if (/^\d*$/.test(val)) {
-			oil.p = parseInt(val);
-			console.log(oil);
+			oil.percent = parseInt(val);
 			const newTotal = checkedOils.reduce((a, b) => {
-				return a + (b.p ? b.p : 0);
+				return a + (b.percent ? b.percent : 0);
 			}, 0);
 			setTotal(newTotal);
 			if (newTotal === 100) {
@@ -226,29 +226,74 @@ const OilsListChooser = (props) => {
 		}
 	};
 
+	const handlerToggleShowFavorites = () => {
+		const newShowFavoritesOnly = !showFavoritesOnly;
+		setShowFavoritesOnly(newShowFavoritesOnly);
+	};
+
 	React.useEffect(() => {
-		console.log(checkedOilsNames);
 		if (checkedOilsNames && oilsData) {
-			const oils = oilsData.filter((oil) =>
+			// In case we need to init with percent values
+			// const oils = checkedOilsNames.map((checkedOilName) => {
+			// 	const foundCheckedOil = checkedOils.find(
+			// 		(o) => o.name === checkedOilName
+			// 	);
+			// 	if (foundCheckedOil) {
+			// 		return foundCheckedOil;
+			// 	}
+			// 	const oil = oilsData.find((o) => o.name === checkedOilName);
+			// 	return { percent: 0, ...oil };
+			// 	// checkedOilsNames.includes(checkedOil.name)
+			// });
+
+			let oils = oilsData.filter((oil) =>
 				checkedOilsNames.includes(oil.name)
 			);
-			oils.map((oil) => {
-				return { p: 0, ...oil };
+			oils = oils.map((oil) => {
+				return { percent: 0, ...oil };
 			});
 			setCheckedOils(oils);
 		}
 	}, [checkedOilsNames, oilsData]);
 
+	React.useEffect(() => {
+		setOilsDataList(showFavoritesOnly ? reducedOilsData : oilsData);
+	}, [showFavoritesOnly]);
+
+	if (!oilsData) {
+		return null;
+	}
+
 	const cllListItemTotalBtn =
 		selectedOil && selectedOil === "total"
 			? classes.listItemSelected
 			: classes.listItem;
+
 	return (
 		<div className={classes.main}>
 			{showAllOils && (
 				<div className={classes.listAllOils}>
 					<div className={classes.listHeader}>
-						<h3>Oils List</h3>
+						<h3>
+							Oils List
+							<IconButton
+								onClick={handleClickOpenOils}
+								style={{ marginLeft: "10px" }}
+								size="small"
+							>
+								<InfoIcon />
+							</IconButton>
+							<IconButton
+								onClick={handlerToggleShowFavorites}
+								size="small"
+							>
+								{showFavoritesOnly ? (
+									<FavoriteIcon />
+								) : (
+									<FavoriteBorderIcon />
+								)}
+							</IconButton>
+						</h3>
 						<IconButton
 							onClick={handleMinimizeOilsList}
 							className={classes.iconBtn}
@@ -257,7 +302,7 @@ const OilsListChooser = (props) => {
 						</IconButton>
 					</div>
 					<List className={classes.list}>
-						{oilsData.map((oil, id) => {
+						{oilsDataList.map((oil, id) => {
 							const labelId = oil.name;
 							const cllListItem = getListItemClass(
 								classes,
@@ -293,7 +338,6 @@ const OilsListChooser = (props) => {
 										className={classes.listItemButton}
 										role={undefined}
 										onClick={handleClick(oil)}
-										dense
 									>
 										{labelId}
 									</CustomButton>
@@ -346,6 +390,9 @@ const OilsListChooser = (props) => {
 								</CustomButton>
 								<CustomInput
 									aria-label="Oil Percentage"
+									value={
+										isNaN(oil.percent) ? "" : oil.percent
+									}
 									onChange={(e) => proportionChanged(e, oil)}
 								/>
 							</ListItem>
@@ -377,6 +424,10 @@ const OilsListChooser = (props) => {
 					) : null}
 				</List>
 			</div>
+			<OilsModal
+				oilsModalOpen={oilsModalOpen}
+				onCloseOilsModal={handleOilsModalClose}
+			/>
 		</div>
 	);
 };

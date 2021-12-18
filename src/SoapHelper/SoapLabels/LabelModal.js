@@ -1,6 +1,4 @@
-import "./LabelModal.css";
-import Label from "./labelLayouts/Label";
-import { useCurrentSoapLabel, useSettings } from "./store/actions";
+import { withStyles } from "@material-ui/core/styles";
 import BackspaceIcon from "@mui/icons-material/Backspace";
 import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/Info";
@@ -17,6 +15,17 @@ import { DialogContent } from "@mui/material";
 import { Grid } from "@mui/material";
 import { IconButton } from "@mui/material";
 import { Tooltip } from "@mui/material";
+import Label from "SoapHelper/SoapLabels/labelLayouts/Label";
+import {
+	useCurrentSoapLabel,
+	useSettings,
+} from "SoapHelper/SoapLabels/store/actions";
+import {
+	gridItemClose,
+	modalBox,
+	secondTitle,
+	gridForm,
+} from "SoapHelper/styles/styles";
 import * as React from "react";
 
 const translations = {
@@ -44,11 +53,45 @@ const translations = {
 	"Sunflower Oil": "Huile de tournesol",
 };
 
-export default function LabelModal(props) {
+const styles = () => ({
+	gridForm,
+	form: {
+		display: "flex",
+		justifyContent: "flex-end",
+	},
+	tfRecipeCode: {
+		width: "100%",
+	},
+	modalBox: {
+		...modalBox,
+	},
+	secondTitle: {
+		...secondTitle,
+	},
+	gridItemClose: {
+		...gridItemClose,
+	},
+	gridResult: {
+		boxShadow: "rgb(100 100 111 / 50%) 2px 2px 7px 0px",
+		display: "flex",
+		justifyContent: "center",
+	},
+	gridItemButtons: {
+		width: "100%",
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "flex-end",
+	},
+	button: {
+		marginLeft: "10px !important",
+	},
+});
+
+const LabelModal = (props) => {
 	const settings = useSettings();
 	const currentSoapLabel = useCurrentSoapLabel();
 
-	const { saveLabel, onCloseLabelModal, labelModalOpen } = props;
+	const { classes, saveLabel, onCloseLabelModal, labelModalOpen } = props;
 
 	const [useThinSpace, setUseThinSpace] = React.useState(false);
 	const [useSoapCalcRecipe, setUseSoapCalcRecipe] = React.useState(false);
@@ -280,19 +323,19 @@ export default function LabelModal(props) {
 	return (
 		<Dialog open={labelModalOpen} scroll="body" maxWidth={"1000px"}>
 			<DialogContent dividers={false}>
-				<Box className="modalBox">
-					<FormControl
-						fullWidth={true}
-						component="form"
-						className="form"
-					>
-						<Grid container spacing={2} className="gridForm">
+				<Box className={classes.modalBox}>
+					<FormControl fullWidth={true} component="form">
+						<Grid
+							container
+							spacing={2}
+							className={classes.gridForm}
+						>
 							<Grid item xs={6}>
-								<h2 className="secondTitle title">
+								<h2 className={classes.secondTitle}>
 									New Soap Label
 								</h2>
 							</Grid>
-							<Grid item xs={6} className="gridItemClose">
+							<Grid item xs={6} className={classes.gridItemClose}>
 								<IconButton onClick={handleClose}>
 									<CloseIcon />
 								</IconButton>
@@ -357,7 +400,7 @@ export default function LabelModal(props) {
 										id="soap-code"
 										label="Soap Code"
 										size="small"
-										className="tfRecipeCode"
+										className={classes.tfRecipeCode}
 										multiline
 										rows={8}
 										value={soapCode}
@@ -372,7 +415,7 @@ export default function LabelModal(props) {
 										id="soap-ingredients"
 										label="Soap Ingredients"
 										size="small"
-										className="tfRecipeCode"
+										className={classes.tfRecipeCode}
 										multiline
 										rows={8}
 										value={soapIngredients}
@@ -436,16 +479,20 @@ export default function LabelModal(props) {
 									style={{ width: "100%" }}
 								/>
 							</Grid>
-							<Grid item xs={12} className="gridItemButtons">
+							<Grid
+								item
+								xs={12}
+								className={classes.gridItemButtons}
+							>
 								<Button
-									className="button"
+									className={classes.buttons}
 									size="small"
 									endIcon={<BackspaceIcon />}
 								>
 									Clear
 								</Button>
 								<Button
-									className="button"
+									className={classes.buttons}
 									size="small"
 									endIcon={<SaveIcon />}
 									onClick={handleClickSave}
@@ -456,8 +503,8 @@ export default function LabelModal(props) {
 						</Grid>
 					</FormControl>
 
-					<h2 className="secondTitle">Label Preview</h2>
-					<Grid className="gridResult" {...pagePadding}>
+					<h2 className={classes.secondTitle}>Label Preview</h2>
+					<Grid className={classes.gridResult} {...pagePadding}>
 						{arrPerRow.map((i) => (
 							<Label
 								key={`label-${i}`}
@@ -474,4 +521,6 @@ export default function LabelModal(props) {
 			</DialogContent>
 		</Dialog>
 	);
-}
+};
+
+export default withStyles(styles, { name: "LabelModal" })(LabelModal);

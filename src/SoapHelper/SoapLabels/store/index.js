@@ -1,5 +1,5 @@
-import { createStore } from 'redux';
-import reducer, { defaultSettings } from './reducer';
+import reducer, { defaultSettings } from "./reducer";
+import { createStore } from "redux";
 
 // convert object to string and store in localStorage
 function saveToLocalStorage(state) {
@@ -17,11 +17,11 @@ function loadFromLocalStorage() {
 	try {
 		const serialisedState = localStorage.getItem("SoapLabelsState");
 		if (serialisedState === null) return undefined;
-			const parsedState = JSON.parse(serialisedState);
-			const mergedSettings = {...defaultSettings, ...parsedState.settings}
-			const newState = {...parsedState, 'settings': mergedSettings};
-			console.log(newState);
-			return newState;
+		const parsedState = JSON.parse(serialisedState);
+		const mergedSettings = { ...defaultSettings, ...parsedState.settings };
+		const newState = { ...parsedState, settings: mergedSettings };
+		// console.log(newState);
+		return newState;
 	} catch (e) {
 		console.warn(e);
 		return undefined;

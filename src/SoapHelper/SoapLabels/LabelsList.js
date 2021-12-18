@@ -1,15 +1,4 @@
-import LabelModal from "./LabelModal";
-import "./LabelsList.css";
-import QuantitySelector from "./components/QuantitySelector";
-import {
-	addSoapLabel,
-	editSoapLabel,
-	useSoapLabels,
-	useCurrentSoapLabel,
-	selectCurrentSoapLabel,
-	deleteSoapLabel,
-	editSettings,
-} from "./store/actions";
+import { withStyles } from "@material-ui/core/styles";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
@@ -19,10 +8,81 @@ import { IconButton } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
+import LabelModal from "SoapHelper/SoapLabels/LabelModal";
+import QuantitySelector from "SoapHelper/SoapLabels/components/QuantitySelector";
+import {
+	addSoapLabel,
+	editSoapLabel,
+	useSoapLabels,
+	useCurrentSoapLabel,
+	selectCurrentSoapLabel,
+	deleteSoapLabel,
+	editSettings,
+} from "SoapHelper/SoapLabels/store/actions";
+import {
+	noPrint,
+	rightAbsoluteContainer,
+	secondTitle,
+	wrapperForAbsolute,
+} from "SoapHelper/styles/styles";
 import * as React from "react";
 import { useDispatch } from "react-redux";
 
-export default function LabelsList(props) {
+const styles = () => ({
+	gridSettings: {
+		marginBottom: "30px !important",
+		...noPrint,
+	},
+	secondTitle,
+	wrapperForAbsolute,
+	rightAbsoluteContainer,
+	soapLabelRow: {
+		padding: "0px 5px",
+		backgroundColor: "#fafafa",
+		margin: "5px 0 !important",
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		...wrapperForAbsolute,
+	},
+	soapLabelRowName: {
+		fontFamily: "Shadows Into Light",
+		fontSize: "20px",
+		lineHeight: "40px",
+		margin: "0 0 0 10px",
+	},
+	soapLabelRowDate: {
+		fontFamily: "Lato",
+		fontSize: "10px",
+		lineHeight: "40px",
+		margin: "0 20px 0 0",
+	},
+	soapLabelButtons: {
+		display: "flex",
+		justifyContent: "flex-end",
+		alignItems: "center",
+		alignContent: "centeer",
+		marginLeft: "10px",
+		height: "100%",
+		...rightAbsoluteContainer,
+	},
+	soapLabelRowQty: {
+		height: "24px !important",
+		width: "80px",
+		marginRight: "10px !important",
+	},
+	soapLabelRowButtons: {
+		padding: "10px 0 5px",
+		width: "100%",
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "flex-end",
+	},
+});
+
+const LabelsList = (props) => {
+	const { classes } = props;
 	const [confirmDeleteOpen, setConfirmDeleteOpen] = React.useState(false);
 	const [labelModalOpen, setLabelModalOpen] = React.useState(false);
 	const [soapLabelToDelete, setSoapLabelToDelete] = React.useState(undefined);
@@ -111,10 +171,10 @@ export default function LabelsList(props) {
 
 	return (
 		<React.Fragment>
-			<Grid className="gridSettings noPrint">
-				<div className="wrapperForAbsolute">
-					<h2 className="secondTitle">Soap Label List</h2>
-					<div className="rightAbsoluteContainer">
+			<Grid className={classes.gridSettings}>
+				<div className={classes.wrapperForAbsolute}>
+					<h2 className={classes.secondTitle}>Soap Label List</h2>
+					<div className={classes.rightAbsoluteContainer}>
 						<Button
 							onClick={handleLabelModalOpen}
 							endIcon={<AddCircleIcon />}
@@ -123,7 +183,7 @@ export default function LabelsList(props) {
 						</Button>
 					</div>
 				</div>
-				<Grid container spacing={0} className="soapLabelRows">
+				<Grid container spacing={0} className={classes.soapLabelRows}>
 					{soapLabels && soapLabels.length ? (
 						soapLabels.map((soapLabel) => {
 							index++;
@@ -137,14 +197,16 @@ export default function LabelsList(props) {
 								<Grid
 									item
 									xs={12}
-									className="soapLabelRow wrapperForAbsolute"
+									className={classes.soapLabelRow}
 									key={`soapLabelRow-${index}`}
 								>
-									<span className="soapLabelRowName">
+									<span className={classes.soapLabelRowName}>
 										{soapLabel.name}{" "}
 									</span>
-									<div className="soapLabelButtons rightAbsoluteContainer">
-										<span className="soapLabelRowDate">
+									<div className={classes.soapLabelButtons}>
+										<span
+											className={classes.soapLabelRowDate}
+										>
 											{soapDate}{" "}
 										</span>
 										<QuantitySelector
@@ -214,4 +276,6 @@ export default function LabelsList(props) {
 			/>
 		</React.Fragment>
 	);
-}
+};
+
+export default withStyles(styles, { name: "LabelsList" })(LabelsList);
