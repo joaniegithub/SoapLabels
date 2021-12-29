@@ -13,13 +13,7 @@ import {
 	Tooltip,
 } from "@devexpress/dx-react-chart-material-ui";
 import { withStyles } from "@material-ui/core/styles";
-import {
-	fattyAcids,
-	properties,
-	propertiesIodineINS,
-	idealProperties,
-} from "SoapHelper/SoapOilsCalculator/SoapOilsCalculator";
-import { colors } from "SoapHelper/SoapOilsCalculator/SoapOilsCalculator";
+import OilsModal from "SoapHelper/SoapOilsCalculator/components/OilsModal";
 import {
 	format,
 	Line,
@@ -30,6 +24,13 @@ import {
 	ValueLabelPercent,
 } from "SoapHelper/SoapOilsCalculator/components/OilsStatsChartsProps";
 import OilsStatsTable from "SoapHelper/SoapOilsCalculator/components/OilsStatsTable";
+import {
+	fattyAcids,
+	properties,
+	propertiesIodineINS,
+	idealProperties,
+	colors,
+} from "SoapHelper/SoapOilsCalculator/data/calculatorUtil";
 import { useOilsData } from "SoapHelper/SoapOilsCalculator/store/actions";
 // import { scalePoint } from "d3-scale";
 // import { curveCatmullRom, curveStep, line, stackOffsetExpand } from "d3-shape";
@@ -49,11 +50,11 @@ const demoStyles = () => ({
 		justifyContent: "flex-start",
 	},
 	chartLarge: {
-		paddingRight: "20px",
+		padding: "8px 10px",
 		width: "78%",
 	},
 	chart: {
-		paddingRight: "0px",
+		padding: "8px 0 8px 10px",
 		width: "22%",
 	},
 	table: {

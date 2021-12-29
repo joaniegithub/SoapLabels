@@ -1,10 +1,13 @@
 import { withStyles } from "@material-ui/core/styles";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import InfoIcon from "@mui/icons-material/Info";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import SquareIcon from "@mui/icons-material/Square";
+import { TextField } from "@mui/material";
+import { OutlinedInput } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
@@ -12,13 +15,16 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ToggleButton from "@mui/material/ToggleButton";
 import { styled } from "@mui/system";
-import { colors } from "SoapHelper/SoapOilsCalculator/SoapOilsCalculator";
 import OilsModal from "SoapHelper/SoapOilsCalculator/components/OilsModal";
+import { colors } from "SoapHelper/SoapOilsCalculator/data/calculatorUtil";
 import {
 	useOilsData,
 	useReducedOilsData,
+	useSettings,
+	editSettings,
 } from "SoapHelper/SoapOilsCalculator/store/actions";
 import * as React from "react";
+import { useDispatch } from "react-redux";
 
 const cssCustomInputOutput = `
 	width: 48px;
@@ -166,6 +172,8 @@ const OilsListChooser = (props) => {
 	const [showFavoritesOnly, setShowFavoritesOnly] = React.useState(false);
 	const [oilsDataList, setOilsDataList] = React.useState([]);
 
+	const settings = useSettings();
+	const dispatch = useDispatch();
 	const oilsData = useOilsData();
 	const reducedOilsData = useReducedOilsData();
 
@@ -229,6 +237,7 @@ const OilsListChooser = (props) => {
 	const handlerToggleShowFavorites = () => {
 		const newShowFavoritesOnly = !showFavoritesOnly;
 		setShowFavoritesOnly(newShowFavoritesOnly);
+		dispatch(editSettings({ showFavoritesOnly: newShowFavoritesOnly }));
 	};
 
 	React.useEffect(() => {
@@ -255,6 +264,12 @@ const OilsListChooser = (props) => {
 			setCheckedOils(oils);
 		}
 	}, [checkedOilsNames, oilsData]);
+
+	React.useEffect(() => {
+		if (settings && settings.showFavoritesOnly) {
+			setShowFavoritesOnly(settings.showFavoritesOnly);
+		}
+	}, [settings]);
 
 	React.useEffect(() => {
 		setOilsDataList(showFavoritesOnly ? reducedOilsData : oilsData);
@@ -301,6 +316,26 @@ const OilsListChooser = (props) => {
 							<KeyboardDoubleArrowLeftIcon />
 						</IconButton>
 					</div>
+					<div>
+						<TextField
+							id="oil-search"
+							label="Search for oil"
+							size="small"
+							helperText=""
+							// value={textOilSearch}
+							// onChange={handleOilSearchChange}
+							style={{ width: "100%" }}
+						>
+							<IconButton
+								aria-label="toggle password visibility"
+								// onClick={handleClickShowPassword}
+								// onMouseDown={handleMouseDownPassword}
+								edge="end"
+							>
+								<CloseIcon />
+							</IconButton>
+						</TextField>
+					</div>
 					<List className={classes.list}>
 						{oilsDataList.map((oil, id) => {
 							const labelId = oil.name;
@@ -326,7 +361,7 @@ const OilsListChooser = (props) => {
 												) !== -1
 											}
 											onClick={handleToggle(oil)}
-											tabIndex={-1}
+											// tabIndex={-1}
 											disableRipple
 											inputProps={{
 												"aria-labelledby": labelId,
@@ -338,6 +373,7 @@ const OilsListChooser = (props) => {
 										className={classes.listItemButton}
 										role={undefined}
 										onClick={handleClick(oil)}
+										tabIndex={-1}
 									>
 										{labelId}
 									</CustomButton>
@@ -385,6 +421,8 @@ const OilsListChooser = (props) => {
 								<CustomButton
 									onClick={handleClick(oil)}
 									className={classes.listItemButton}
+									onClick={handleClick(oil)}
+									tabIndex={-1}
 								>
 									{oil.name}
 								</CustomButton>
@@ -414,6 +452,7 @@ const OilsListChooser = (props) => {
 							<CustomButton
 								className={classes.listItemButton}
 								onClick={handleClick(undefined)}
+								tabIndex={-1}
 							>
 								Total
 							</CustomButton>

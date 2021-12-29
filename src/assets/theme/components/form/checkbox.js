@@ -40,8 +40,14 @@ export default {
 				backgroundColor: transparent.main,
 			},
 
+			// "&.Mui-focusVisible": {
+			// border: `${borderWidth[2]} solid ${info.main} !important`
+			// },
 			"&.Mui-focusVisible": {
 				border: `${borderWidth[2]} solid ${info.main} !important`,
+				borderRadius: pxToRem(5.6),
+				// borderWidth: `${borderWidth[2]} !important`,
+				// borderColor: `${info.main} !important`,
 			},
 		},
 

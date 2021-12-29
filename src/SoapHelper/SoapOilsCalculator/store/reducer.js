@@ -31,6 +31,18 @@ const reducer = (state = defaultState, { type, ...payload }) => {
 				settings: { ...state.settings, ...payload.settings },
 			};
 
+		case constants.SET_STEP:
+			return {
+				...state,
+				step: payload.step,
+			};
+
+		// case constants.SAVE_SETTING_PROPERTY_SETTINGS:
+		// 	return {
+		// 		...state,
+		// 		settings: { ...state.settings, ...payload.settings },
+		// 	};
+
 		default:
 			return state;
 	}

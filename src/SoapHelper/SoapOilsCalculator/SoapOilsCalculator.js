@@ -1,154 +1,145 @@
 import { withStyles } from "@material-ui/core/styles";
+// import Step1 from "./steps/Step1";
+// import Step2 from "./steps/Step2";
 import { Box } from "@mui/material";
-import OilsListChooser from "SoapHelper/SoapOilsCalculator/components/OilsListChooser";
-import OilsStatsCharts from "SoapHelper/SoapOilsCalculator/components/OilsStatsCharts";
-// import FormControl from "@mui/material/FormControl";
-// import FormControlLabel from "@mui/material/FormControlLabel";
-// import FormLabel from "@mui/material/FormLabel";
-// import Radio from "@mui/material/Radio";
-// import RadioGroup from "@mui/material/RadioGroup";
-// import { color } from "@mui/system";
+import Button from "@mui/material/Button";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Stepper from "@mui/material/Stepper";
+import Typography from "@mui/material/Typography";
+import Step1 from "SoapHelper/SoapOilsCalculator/steps/Step1";
+import Step2 from "SoapHelper/SoapOilsCalculator/steps/Step2";
 import storeCalculator from "SoapHelper/SoapOilsCalculator/store/";
-import { useOilsData } from "SoapHelper/SoapOilsCalculator/store/actions";
 import Layout from "SoapHelper/layout/Layout";
 import * as React from "react";
 import { Provider } from "react-redux";
 
-export const colors = [
-	"#005d5d",
-	"#FF7043",
-	"#33b1ff",
-	"#EC407A",
-	"#f6c85f",
-	"#46d39a",
-	"#8b6ec3",
-	"#a6d177",
-	"#78909C",
-	"#dd0000",
-	"#004cab",
-	"#efb4cd",
-];
-
-const pointOptions = { point: { size: 10 } };
-
 const styles = () => ({
-	chart: {
-		paddingRight: "20px",
-	},
-	title: {
-		whiteSpace: "pre",
-	},
 	box: {
 		padding: "30px",
 	},
-
-	mainContainer: {
-		display: "flex",
-		flexDirection: "row",
-	},
-	// secondTitle,
 });
 
-export const fattyAcids = [
-	"lauric",
-	"myristic",
-	"palmitic",
-	"stearic",
-	"ricinoleic",
-	"oleic",
-	"linoleic",
-	"linolenic",
-];
-
-export const properties = [
-	"hardness",
-	"cleansing",
-	"condition",
-	"bubbly",
-	"creamy",
-	"longevity",
-	"saturated",
-	"unsat",
-];
-export const propertiesIodineINS = ["iodine", "ins"];
-
-export const idealProperties = {
-	hardness: [29, 41.5, 54],
-	cleansing: [12, 17, 22],
-	condition: [44, 56.5, 69],
-	bubbly: [14, 30, 46],
-	creamy: [16, 32, 48],
-	longevity: [25, 35, 45],
-	iodine: [41, 55.5, 70],
-	ins: [136, 150.5, 165],
-	saturated: [35, 40, 45],
-	unsat: [55, 60, 65],
-};
+const steps = ["Formulation settings", "Oils Selection", "Create an ad"];
 
 const Main = (props) => {
-	const settings = true;
 	const { classes } = props;
-	const oilsData = useOilsData();
-	// const [view, setView] = React.useState("fatty");
 
-	const [selectedOils, setSelectedOils] = React.useState([]);
-	const [checkedOilsNames, setCheckedOilsNames] = React.useState([
-		"Olive Oil",
-		"Coconut Oil, 76 deg",
-		"Palm Oil",
-		// "Castor Oil",
-		// "Almond Oil, sweet",
-		// "Safflower Oil",
-		// "Canola Oil",
-	]);
+	const [activeStep, setActiveStep] = React.useState(0);
+	const [skipped, setSkipped] = React.useState(new Set());
 
-	// const handleChangeView = (event) => {
-	// 	setView(event.target.value);
+	const isStepOptional = (step) => {
+		return step === 1;
+	};
+
+	const isStepSkipped = (step) => {
+		return skipped.has(step);
+	};
+
+	const handleStep = (step) => () => {
+		setActiveStep(step);
+	};
+
+	// const handleNext = () => {
+	// 	let newSkipped = skipped;
+	// 	if (isStepSkipped(activeStep)) {
+	// 		newSkipped = new Set(newSkipped.values());
+	// 		newSkipped.delete(activeStep);
+	// 	}
+
+	// 	setActiveStep((prevActiveStep) => prevActiveStep + 1);
+	// 	setSkipped(newSkipped);
 	// };
 
-	React.useEffect(() => {
-		// updateData();
-	}, [checkedOilsNames]);
+	// const handleBack = () => {
+	// 	setActiveStep((prevActiveStep) => prevActiveStep - 1);
+	// };
 
-	const handlerOilSelect = (oils) => {
-		setSelectedOils([...oils]);
-	};
+	// const handleSkip = () => {
+	// 	if (!isStepOptional(activeStep)) {
+	// 		// You probably want to guard against something like this,
+	// 		// it should never occur unless someone's actively trying to break something.
+	// 		throw new Error("You can't skip a step that isn't optional.");
+	// 	}
+
+	// 	setActiveStep((prevActiveStep) => prevActiveStep + 1);
+	// 	setSkipped((prevSkipped) => {
+	// 		const newSkipped = new Set(prevSkipped.values());
+	// 		newSkipped.add(activeStep);
+	// 		return newSkipped;
+	// 	});
+	// };
+
+	// const handleReset = () => {
+	// 	setActiveStep(0);
+	// };
 
 	return (
 		<Layout>
 			<Box className={classes.box}>
-				{/*<div>
-					<h2 className={classes.secondTitle}>Soap Oils</h2>
-				</div>
-				<FormControl component="fieldset">
-					<FormLabel component="legend">View</FormLabel>
-					<RadioGroup
-						aria-label="view"
-						defaultValue="fatty"
-						name="radio-view-group"
-						value={view}
-						onChange={handleChangeView}
-						row
-					>
-						<FormControlLabel
-							value="fatty"
-							control={<Radio />}
-							label="Fatty"
-						/>
-						<FormControlLabel
-							value="properties"
-							control={<Radio />}
-							label="Properties"
-						/>
-					</RadioGroup>
-				</FormControl>*/}
-				<div className={classes.mainContainer}>
-					<OilsListChooser
-						checkedOilsNames={checkedOilsNames}
-						onOilSelect={handlerOilSelect}
-					/>
-					<OilsStatsCharts selectedOils={selectedOils} />
-				</div>
+				<Stepper activeStep={activeStep}>
+					{steps.map((label, index) => {
+						const stepProps = {};
+						const labelProps = {};
+						// if (isStepOptional(index)) {
+						// 	labelProps.optional = (
+						// 		<Typography variant="caption">
+						// 			Optional
+						// 		</Typography>
+						// 	);
+						// }
+						// if (isStepSkipped(index)) {
+						// 	stepProps.completed = false;
+						// }
+						return (
+							<Step key={label} {...stepProps}>
+								<StepLabel
+									{...labelProps}
+									onClick={handleStep(index)}
+								>
+									{label}
+								</StepLabel>
+							</Step>
+						);
+					})}
+				</Stepper>
+				{/*activeStep === steps.length ? (
+						<React.Fragment>
+							<Box
+								sx={{
+									display: "flex",
+									flexDirection: "row",
+									pt: 2,
+								}}
+							>
+								<Box sx={{ flex: "1 1 auto" }} />
+								<Button onClick={handleReset}>Reset</Button>
+							</Box>
+						</React.Fragment>
+					) : (
+						<React.Fragment>
+							<Box
+								sx={{
+									display: "flex",
+									flexDirection: "row",
+									pt: 2,
+								}}
+							>
+								<Box sx={{ flex: "1 1 auto" }} />
+								{isStepOptional(activeStep) && (
+									<Button
+										color="inherit"
+										onClick={handleSkip}
+										sx={{ mr: 1 }}
+									>
+										Skip
+									</Button>
+								)}
+							</Box>
+						</React.Fragment>
+								)*/}
+				{activeStep === 0 && <Step1 />}
+				{activeStep === 1 && <Step2 />}
 			</Box>
 		</Layout>
 	);

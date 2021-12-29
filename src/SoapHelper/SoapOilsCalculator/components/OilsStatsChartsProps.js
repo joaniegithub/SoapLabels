@@ -135,6 +135,7 @@ const titleStyles = {
 		fontFamily: "Lato",
 		fontSize: "1.25em",
 		marginBottom: 0,
+		lineHeight: "30px",
 	},
 };
 export const TitleText = withStyles(titleStyles)(({ classes, ...props }) => (

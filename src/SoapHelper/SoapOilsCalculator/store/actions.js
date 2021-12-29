@@ -33,3 +33,18 @@ export const editSettings = (_settingsData) => {
 		settings: _settingsData,
 	};
 };
+
+export const setStep = (_step) => {
+	// console.log(_settingsData, 'settings');
+	return {
+		type: constants.SET_STEP,
+		step: _step,
+	};
+};
+// export const saveSettingsProperty = (_settingProperty) => {
+// 	// console.log(_settingsData, 'settings');
+// 	return {
+// 		type: constants.SAVE_SETTING_PROPERTY_SETTINGS,
+// 		settings: {...state.settings, _settingProperty},
+// 	};
+// };

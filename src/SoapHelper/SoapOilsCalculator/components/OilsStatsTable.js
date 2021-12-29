@@ -3,7 +3,7 @@ import {
 	fattyAcids,
 	properties,
 	propertiesIodineINS,
-} from "SoapHelper/SoapOilsCalculator/SoapOilsCalculator";
+} from "SoapHelper/SoapOilsCalculator/data/calculatorUtil";
 import * as React from "react";
 
 const styles = () => ({
