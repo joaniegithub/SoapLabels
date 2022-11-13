@@ -9,6 +9,7 @@ import { RadioGroup } from "@mui/material";
 import { FormControlLabel } from "@mui/material";
 import { FormControl } from "@mui/material";
 import { FormLabel } from "@mui/material";
+import { Checkbox } from "@mui/material";
 import { InputLabel } from "@mui/material";
 import { Dialog } from "@mui/material";
 import { DialogContent } from "@mui/material";
@@ -26,6 +27,7 @@ import {
 	modalBox,
 } from "SoapHelper/styles/styles";
 import * as React from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 const styles = () => ({
@@ -47,79 +49,74 @@ const styles = () => ({
 const sliderStyle = { marginLeft: 12, marginRight: 12, width: "auto" };
 const sliderPaddingProperties = {
 	min: 10,
-	max: 100,
+	max: 150,
 	// marks: [{value: 10, label: '10'}, {value: 100, label: '100'}]
 };
 
 const SettingsModal = (props) => {
 	const dispatch = useDispatch();
-	const settings = useSettings();
+	const initialSettings = useSettings();
 
 	const { classes, onCloseSettingsModal, settingsModalOpen } = props;
 
-	const [brand, setBrand] = React.useState(settings.brand);
-	const [brandError /*, setBrandError*/] = React.useState(false);
-	const [font, setFont] = React.useState(settings.font);
-	const [fontError /*, setFontError*/] = React.useState(false);
-	const [pagePadding, setPagePadding] = React.useState(settings.pagePadding);
-	const [padding, setPadding] = React.useState(settings.padding);
+	const [settings, setSettings] = React.useState(JSON.parse(JSON.stringify(initialSettings)));
 
-	const [layout, setLayout] = React.useState(settings.layout);
-	const [isLayoutColumn, setIsLayoutColumn] = React.useState(
-		settings.layout === "columns"
-	);
-	const [layoutNbPerRow, setLayoutNbPerRow] = React.useState(
-		settings.layoutNbPerRow
-	);
-	const [layoutNbPerRowArray, setLayoutNbPerRowArray] = React.useState([
-		...Array(settings.layoutNbPerRow).keys(),
-	]);
-	const [textAlignment, setTextAlignment] = React.useState(
-		settings.textAlignment
-	);
-	const [leftColumnWidth, setLeftColumnWidth] = React.useState(
-		settings.leftColumnWidth
-	);
-	const [seperatorWidth, setSeperatorWidth] = React.useState(
-		settings.seperatorWidth
-	);
+	const [brand, setBrand] = React.useState("");
+	const [brandError /*, setBrandError*/] = React.useState(false);
+	const [font, setFont] = React.useState("");
+	const [fontError /*, setFontError*/] = React.useState(false);
+	const [pagePadding, setPagePadding] = React.useState({ pt: 36, pl: 36 });
+	const [padding, setPadding] = React.useState({
+		pt: 20,
+		pb: 20,
+		pl: 20,
+		pr: 20,
+		pl1: 50,
+		pr1: 50,
+		pl2: 10,
+		pr2: 20,
+	});
+
+	const [layout, setLayout] = React.useState("");
+	const [isLayoutColumn, setIsLayoutColumn] = React.useState("");
+	const [layoutNbPerRow, setLayoutNbPerRow] = React.useState("");
+	const [layoutNbPerRowArray, setLayoutNbPerRowArray] = React.useState([]);
+	const [textAlignment, setTextAlignment] = React.useState("");
+	const [leftColumnWidth, setLeftColumnWidth] = React.useState(0);
+	const [seperatorWidth, setSeperatorWidth] = React.useState(0);
+	const [dateLeft, setDateLeft] = React.useState(false);
 
 	const handleBrandChange = (event) => {
 		setBrand(event.target.value);
-		updateSettings();
 	};
 	const handleFontChange = (event) => {
 		setFont(event.target.value);
-		updateSettings();
 	};
 	const handleLayoutChange = (event) => {
 		setLayout(event.target.value);
 		setIsLayoutColumn(event.target.value === "columns");
-		updateSettings();
 	};
 	const handlePagePaddingChange = (value, property) => {
-		pagePadding[property] = value;
 		const newPagePadding = { ...pagePadding };
+		newPagePadding[property] = value;
 		setPagePadding(newPagePadding);
-		updateSettings();
 	};
 	const handlePaddingChange = (value, property) => {
-		padding[property] = value;
 		const newPadding = { ...padding };
+		newPadding[property] = value;
 		setPadding(newPadding);
-		updateSettings();
 	};
 	const handleLeftColumnWidthChange = (event) => {
 		setLeftColumnWidth(event.target.value / 100);
-		updateSettings();
 	};
 	const handleSeperatorWidthChange = (event) => {
 		setSeperatorWidth(event.target.value);
-		updateSettings();
 	};
 	const handleTextAlignmentChange = (event) => {
 		setTextAlignment(event.target.value);
-		updateSettings();
+	};
+	const handleDateLeftChange = (event) => {
+		setDateLeft(!!event.target.checked);
 	};
 	const handleLayoutNbPerRowChange = (event) => {
 		const val = parseInt(event.target.value);
@@ -127,41 +124,67 @@ const SettingsModal = (props) => {
 		if (valid) {
 			setLayoutNbPerRow(val);
 			setLayoutNbPerRowArray([...Array(val).keys()]);
-			updateSettings();
 		}
 	};
 
 	const demoSoap = {
-		soapName: "Soap name",
+		name: "Soap Name",
 		ingredients:
 			"Ingredients: water, coconut oil, palm oil, lye, avocado oil, canola oil, castor oil, olive oil, safflower oil, cocoa butter, fragrance(s), colorant(s).",
 		phrase: "Some catchy phrase",
-		soapDate: new Date(),
+		date: new Date(),
 	};
 
 	const updateSettings = () => {
-		// setSettings({...settings});
-		// settings.brand = event.target.value;
-		// settings.font = event.target.value;
-		// settings.layout = event.target.value;
-		// settings.padding = newPadding;
-		// settings.leftColumnWidth = event.target.value/100;
-		// settings.seperatorWidth = event.target.value;
-		// settings.textAlignment = event.target.value;
-	};
-
-	const handleClose = () => {
 		const settingsData = {
 			brand,
 			font,
 			layout,
+			pagePadding,
 			padding,
 			leftColumnWidth,
 			seperatorWidth,
 			textAlignment,
 			layoutNbPerRow,
+			dateLeft,
 		};
-		dispatch(editSettings(settingsData));
+		setSettings(settingsData);
+	};
+
+	useEffect(() => {
+		if (initialSettings) {
+			setBrand(settings.brand);
+			setFont(settings.font);
+			setPagePadding(settings.pagePadding);
+			setPadding(settings.padding);
+			setLayout(settings.layout);
+			setIsLayoutColumn(settings.layout === "columns");
+			setLayoutNbPerRow(settings.layoutNbPerRow);
+			setDateLeft(settings.dateLeft);
+			setLayoutNbPerRowArray([...Array(settings.layoutNbPerRow).keys()]);
+			setTextAlignment(settings.leftColumnWidth);
+			setLeftColumnWidth(settings.leftColumnWidth);
+			setSeperatorWidth(settings.seperatorWidth);
+		}
+	}, [initialSettings]);
+
+	useEffect(() => {
+		updateSettings();
+	}, [
+		brand,
+		font,
+		layout,
+		pagePadding,
+		padding,
+		leftColumnWidth,
+		seperatorWidth,
+		textAlignment,
+		layoutNbPerRow,
+		dateLeft,
+	]);
+
+	const handleClose = () => {
+		dispatch(editSettings(settings));
 		onCloseSettingsModal();
 	};
 
@@ -175,17 +198,13 @@ const SettingsModal = (props) => {
 			<React.Fragment>
 				<Grid item xs={6}>
 					<FormControl fullWidth>
-						<FormLabel component="legend">
-							Page Top/Bottom Padding
-						</FormLabel>
+						<FormLabel component="legend">Page Top/Bottom Padding</FormLabel>
 						<Slider
 							id="pagePadding-top"
 							label="Page Top Padding"
 							size="small"
 							value={parseInt(pagePadding.pt)}
-							onChange={(e) =>
-								handlePagePaddingChange(e.target.value, "pt")
-							}
+							onChange={(e) => handlePagePaddingChange(e.target.value, "pt")}
 							valueLabelDisplay={sliderValueLabelDisplay}
 							{...sliderPaddingProperties}
 							style={sliderStyle}
@@ -195,17 +214,13 @@ const SettingsModal = (props) => {
 				</Grid>
 				<Grid item xs={6}>
 					<FormControl fullWidth>
-						<FormLabel component="legend">
-							Page Left/Right Padding
-						</FormLabel>
+						<FormLabel component="legend">Page Left/Right Padding</FormLabel>
 						<Slider
 							id="pagePadding-bottom"
 							label="Page Bottom Padding"
 							size="small"
 							value={parseInt(pagePadding.pl)}
-							onChange={(e) =>
-								handlePagePaddingChange(e.target.value, "pl")
-							}
+							onChange={(e) => handlePagePaddingChange(e.target.value, "pl")}
 							valueLabelDisplay={sliderValueLabelDisplay}
 							{...sliderPaddingProperties}
 							style={sliderStyle}
@@ -241,17 +256,13 @@ const SettingsModal = (props) => {
 				</Grid>
 				<Grid item xs={smallLabelPadding ? 3 : 6}>
 					<FormControl fullWidth>
-						<FormLabel component="legend">
-							Label Top Padding
-						</FormLabel>
+						<FormLabel component="legend">Label Top Padding</FormLabel>
 						<Slider
 							id="padding-top"
 							label="Top padding"
 							size="small"
 							value={parseInt(padding.pt)}
-							onChange={(e) =>
-								handlePaddingChange(e.target.value, "pt")
-							}
+							onChange={(e) => handlePaddingChange(e.target.value, "pt")}
 							valueLabelDisplay={sliderValueLabelDisplay}
 							{...sliderPaddingProperties}
 							style={sliderStyle}
@@ -261,17 +272,13 @@ const SettingsModal = (props) => {
 				</Grid>
 				<Grid item xs={smallLabelPadding ? 3 : 6}>
 					<FormControl fullWidth>
-						<FormLabel component="legend">
-							Label Bottom Padding
-						</FormLabel>
+						<FormLabel component="legend">Label Bottom Padding</FormLabel>
 						<Slider
 							id="padding-bottom"
 							label="Bottom Padding"
 							size="small"
 							value={parseInt(padding.pb)}
-							onChange={(e) =>
-								handlePaddingChange(e.target.value, "pb")
-							}
+							onChange={(e) => handlePaddingChange(e.target.value, "pb")}
 							valueLabelDisplay={sliderValueLabelDisplay}
 							{...sliderPaddingProperties}
 							style={sliderStyle}
@@ -289,26 +296,16 @@ const SettingsModal = (props) => {
 				<Box className={classes.modalBox}>
 					<FormControl fullWidth={true} component="form">
 						<RadioGroup
-							aria-label="layour"
+							aria-label="layout"
 							value={layout}
 							onChange={handleLayoutChange}
 							name="radio-buttons-group"
 						>
-							<Grid
-								container
-								spacing={2}
-								className={classes.gridForm}
-							>
+							<Grid container spacing={2} className={classes.gridForm}>
 								<Grid item xs={6}>
-									<h2 className={classes.secondTitle}>
-										Settings
-									</h2>
+									<h2 className={classes.secondTitle}>Settings</h2>
 								</Grid>
-								<Grid
-									item
-									xs={6}
-									className={classes.gridItemClose}
-								>
+								<Grid item xs={6} className={classes.gridItemClose}>
 									<IconButton onClick={handleClose}>
 										<CloseIcon />
 									</IconButton>
@@ -326,16 +323,15 @@ const SettingsModal = (props) => {
 												label="Columns Layout"
 											/>
 											<div>
-												{layoutNbPerRowArray.map(
-													(i) => (
-														<Label
-															key={`label-${i}`}
-															layout="columns"
-															soapLabel={demoSoap}
-															demo={true}
-														/>
-													)
-												)}
+												{layoutNbPerRowArray.map((i) => (
+													<Label
+														key={`label-${i}`}
+														layout="columns"
+														soapLabel={demoSoap}
+														demo={true}
+														tmpSettings={settings}
+													/>
+												))}
 											</div>
 										</Grid>
 										{isLayoutColumn && (
@@ -350,13 +346,10 @@ const SettingsModal = (props) => {
 															id="padding-left"
 															label="Left Padding"
 															size="small"
-															value={parseInt(
-																padding.pl
-															)}
+															value={parseInt(padding.pl)}
 															onChange={(e) =>
 																handlePaddingChange(
-																	e.target
-																		.value,
+																	e.target.value,
 																	"pl"
 																)
 															}
@@ -365,9 +358,7 @@ const SettingsModal = (props) => {
 															}
 															{...sliderPaddingProperties}
 															style={sliderStyle}
-															valueLabelFormat={
-																valueLabelFormatInPx
-															}
+															valueLabelFormat={valueLabelFormatInPx}
 														/>
 													</FormControl>
 												</Grid>
@@ -380,13 +371,10 @@ const SettingsModal = (props) => {
 															id="padding-right"
 															label="Right Padding"
 															size="small"
-															value={parseInt(
-																padding.pr
-															)}
+															value={parseInt(padding.pr)}
 															onChange={(e) =>
 																handlePaddingChange(
-																	e.target
-																		.value,
+																	e.target.value,
 																	"pr"
 																)
 															}
@@ -395,17 +383,14 @@ const SettingsModal = (props) => {
 															}
 															{...sliderPaddingProperties}
 															style={sliderStyle}
-															valueLabelFormat={
-																valueLabelFormatInPx
-															}
+															valueLabelFormat={valueLabelFormatInPx}
 														/>
 													</FormControl>
 												</Grid>
 												<Grid item xs={6}>
 													<FormControl fullWidth>
 														<InputLabel id="nbPerRow-label">
-															Number of label per
-															row (between 2 and
+															Number of label per row (between 2 and
 															6)
 														</InputLabel>
 														<Select
@@ -414,32 +399,18 @@ const SettingsModal = (props) => {
 															labelId="nbPerRow-label"
 															label="Number of Label per Row (2 to 6)"
 															size="small"
-															value={
-																layoutNbPerRow
-															}
+															value={layoutNbPerRow}
 															// error={layoutNbPerRowError}
-															onChange={
-																handleLayoutNbPerRowChange
-															}
+															onChange={handleLayoutNbPerRowChange}
 															style={{
 																width: "100%",
 															}}
 														>
-															<MenuItem value={2}>
-																2
-															</MenuItem>
-															<MenuItem value={3}>
-																3
-															</MenuItem>
-															<MenuItem value={4}>
-																4
-															</MenuItem>
-															<MenuItem value={5}>
-																5
-															</MenuItem>
-															<MenuItem value={6}>
-																6
-															</MenuItem>
+															<MenuItem value={2}>2</MenuItem>
+															<MenuItem value={3}>3</MenuItem>
+															<MenuItem value={4}>4</MenuItem>
+															<MenuItem value={5}>5</MenuItem>
+															<MenuItem value={6}>6</MenuItem>
 														</Select>
 													</FormControl>
 												</Grid>
@@ -454,34 +425,33 @@ const SettingsModal = (props) => {
 															labelId="textAlignment-label"
 															label="Text Alignment"
 															size="small"
-															value={
-																textAlignment
-															}
-															onChange={
-																handleTextAlignmentChange
-															}
+															value={textAlignment}
+															onChange={handleTextAlignmentChange}
 															style={{
 																width: "100%",
 															}}
 														>
-															<MenuItem value="left">
-																Left
-															</MenuItem>
-															<MenuItem value="right">
-																Right
-															</MenuItem>
+															<MenuItem value="left">Left</MenuItem>
+															<MenuItem value="right">Right</MenuItem>
 														</Select>
 													</FormControl>
+												</Grid>
+												<Grid item xs={6}>
+													<FormControlLabel
+														control={
+															<Checkbox
+																checked={dateLeft}
+																onChange={handleDateLeftChange}
+															/>
+														}
+														label="Date on the left"
+													/>
 												</Grid>
 											</React.Fragment>
 										)}
 									</Grid>
 								</Grid>
-								<Grid
-									item
-									xs={12}
-									className={classes.gridItemLayout}
-								>
+								<Grid item xs={12} className={classes.gridItemLayout}>
 									<Grid
 										container
 										spacing={2}
@@ -497,6 +467,7 @@ const SettingsModal = (props) => {
 												layout="wide"
 												soapLabel={demoSoap}
 												demo={true}
+												tmpSettings={settings}
 											/>
 										</Grid>
 										{!isLayoutColumn && (
@@ -505,20 +476,16 @@ const SettingsModal = (props) => {
 												<Grid item xs={3}>
 													<FormControl fullWidth>
 														<FormLabel component="legend">
-															Column 1 Left
-															Padding
+															Column 1 Left Padding
 														</FormLabel>
 														<Slider
 															id="padding-left1"
 															label="Column 1 Left Padding"
 															size="small"
-															value={parseInt(
-																padding.pl1
-															)}
+															value={parseInt(padding.pl1)}
 															onChange={(e) =>
 																handlePaddingChange(
-																	e.target
-																		.value,
+																	e.target.value,
 																	"pl1"
 																)
 															}
@@ -527,29 +494,23 @@ const SettingsModal = (props) => {
 															}
 															{...sliderPaddingProperties}
 															style={sliderStyle}
-															valueLabelFormat={
-																valueLabelFormatInPx
-															}
+															valueLabelFormat={valueLabelFormatInPx}
 														/>
 													</FormControl>
 												</Grid>
 												<Grid item xs={3}>
 													<FormControl fullWidth>
 														<FormLabel component="legend">
-															Column 1 Right
-															Padding
+															Column 1 Right Padding
 														</FormLabel>
 														<Slider
 															id="padding-right1"
 															label="Column 1 Right Padding"
 															size="small"
-															value={parseInt(
-																padding.pr1
-															)}
+															value={parseInt(padding.pr1)}
 															onChange={(e) =>
 																handlePaddingChange(
-																	e.target
-																		.value,
+																	e.target.value,
 																	"pr1"
 																)
 															}
@@ -558,29 +519,23 @@ const SettingsModal = (props) => {
 															}
 															{...sliderPaddingProperties}
 															style={sliderStyle}
-															valueLabelFormat={
-																valueLabelFormatInPx
-															}
+															valueLabelFormat={valueLabelFormatInPx}
 														/>
 													</FormControl>
 												</Grid>
 												<Grid item xs={3}>
 													<FormControl fullWidth>
 														<FormLabel component="legend">
-															Column 2 Left
-															Padding
+															Column 2 Left Padding
 														</FormLabel>
 														<Slider
 															id="padding-left2"
 															label="Column 2 Left Padding"
 															size="small"
-															value={parseInt(
-																padding.pl2
-															)}
+															value={parseInt(padding.pl2)}
 															onChange={(e) =>
 																handlePaddingChange(
-																	e.target
-																		.value,
+																	e.target.value,
 																	"pl2"
 																)
 															}
@@ -589,29 +544,23 @@ const SettingsModal = (props) => {
 															}
 															{...sliderPaddingProperties}
 															style={sliderStyle}
-															valueLabelFormat={
-																valueLabelFormatInPx
-															}
+															valueLabelFormat={valueLabelFormatInPx}
 														/>
 													</FormControl>
 												</Grid>
 												<Grid item xs={3}>
 													<FormControl fullWidth>
 														<FormLabel component="legend">
-															Column 2 Right
-															Padding
+															Column 2 Right Padding
 														</FormLabel>
 														<Slider
 															id="padding-right2"
 															label="Column 2 Right Padding"
 															size="small"
-															value={parseInt(
-																padding.pr2
-															)}
+															value={parseInt(padding.pr2)}
 															onChange={(e) =>
 																handlePaddingChange(
-																	e.target
-																		.value,
+																	e.target.value,
 																	"pr2"
 																)
 															}
@@ -620,28 +569,20 @@ const SettingsModal = (props) => {
 															}
 															{...sliderPaddingProperties}
 															style={sliderStyle}
-															valueLabelFormat={
-																valueLabelFormatInPx
-															}
+															valueLabelFormat={valueLabelFormatInPx}
 														/>
 													</FormControl>
 												</Grid>
 												<Grid item xs={6}>
 													<FormControl fullWidth>
 														<FormLabel component="legend">
-															Left Column Size (in
-															%)
+															Left Column Size (in %)
 														</FormLabel>
 														<Slider
 															id="textAlignment"
 															label="Left Column Size (in %)"
-															value={parseInt(
-																leftColumnWidth *
-																	100
-															)}
-															onChange={
-																handleLeftColumnWidthChange
-															}
+															value={parseInt(leftColumnWidth * 100)}
+															onChange={handleLeftColumnWidthChange}
 															size="small"
 															valueLabelDisplay={
 																sliderValueLabelDisplay
@@ -659,18 +600,13 @@ const SettingsModal = (props) => {
 												<Grid item xs={6}>
 													<FormControl fullWidth>
 														<FormLabel component="legend">
-															Seperator Width (in
-															px)
+															Seperator Width (in px)
 														</FormLabel>
 														<Slider
 															id="seperatorWidth"
 															label="Seperator Width (in px)"
-															value={parseInt(
-																seperatorWidth
-															)}
-															onChange={
-																handleSeperatorWidthChange
-															}
+															value={parseInt(seperatorWidth)}
+															onChange={handleSeperatorWidthChange}
 															size="small"
 															valueLabelDisplay={
 																sliderValueLabelDisplay
@@ -679,9 +615,7 @@ const SettingsModal = (props) => {
 															min={0}
 															max={10}
 															style={sliderStyle}
-															valueLabelFormat={
-																valueLabelFormatInPx
-															}
+															valueLabelFormat={valueLabelFormatInPx}
 														/>
 													</FormControl>
 												</Grid>

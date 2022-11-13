@@ -10,7 +10,8 @@ const styles = () => ({});
 export const StyledP = styled("p")``;
 
 const Label = (props) => {
-	const settings = useSettings();
+	const initialSettings = useSettings();
+	const settings = props.tmpSettings || initialSettings;
 
 	const { classes, layout: layoutProps, demo: demoProps, soapLabel } = props;
 
@@ -21,7 +22,7 @@ const Label = (props) => {
 		backgroundColor: demo ? "#f8f8f8" : "transparent",
 	};
 
-	const dateOptions = { year: "numeric", month: "long", day: "numeric" };
+	const dateOptions = { year: "numeric", month: "short", day: "numeric" };
 	const soapDate = soapLabel.date
 		? new Date(soapLabel.date).toLocaleDateString("fr-FR", dateOptions)
 		: "";
@@ -34,13 +35,10 @@ const Label = (props) => {
 		dateOptions,
 		soapDate,
 	};
+
 	return (
 		<React.Fragment>
-			{layout === "columns" ? (
-				<LabelColumns {...allProps} />
-			) : (
-				<LabelWide {...allProps} />
-			)}
+			{layout === "columns" ? <LabelColumns {...allProps} /> : <LabelWide {...allProps} />}
 		</React.Fragment>
 	);
 };

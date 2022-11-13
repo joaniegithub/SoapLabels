@@ -5,6 +5,7 @@ export const defaultSettings = {
 	brand: "",
 	layout: "columns",
 	layoutNbPerRow: 3,
+	dateLeft: false,
 	textAlignment: "left",
 	leftColumnWidth: 0.65,
 	seperatorWidth: 5,
@@ -60,9 +61,7 @@ const reducer = (state = defaultState, { type, ...payload }) => {
 			return {
 				...state,
 				soapLabels: state.soapLabels.filter((soapLabel, i) =>
-					soapLabel.uid === payload.soapLabelToDelete.uid
-						? false
-						: true
+					soapLabel.uid === payload.soapLabelToDelete.uid ? false : true
 				),
 			};
 

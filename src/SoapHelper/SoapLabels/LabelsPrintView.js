@@ -7,10 +7,7 @@ import { Grid } from "@mui/material";
 import { Tooltip } from "@mui/material";
 import SettingsModal from "SoapHelper/SoapLabels/SettingsModal";
 import Label from "SoapHelper/SoapLabels/labelLayouts/Label";
-import {
-	useSoapLabels,
-	useSettings,
-} from "SoapHelper/SoapLabels/store/actions";
+import { useSoapLabels, useSettings } from "SoapHelper/SoapLabels/store/actions";
 import {
 	rightAbsoluteContainer,
 	secondTitle,
@@ -29,10 +26,21 @@ const styles = () => ({
 	gridPrintLabels: {
 		boxShadow: "rgb(100 100 111 / 50%) 2px 2px 7px 0px",
 		display: "block",
+		"@media print": {
+			// boxShadow: "none",
+			borderWidth: "0 !important",
+			borderWidth: "0 !important",
+			verticalAlign: "top",
+			width: "100%",
+		},
 	},
 	gridPrintRow: {
 		display: "flex",
 		alignItems: "flex-start",
+		"@media print": {
+			pageBreakInside: "avoid",
+			breakInside: "avoid",
+		},
 	},
 });
 
@@ -42,9 +50,8 @@ const LabelsPrintView = (props) => {
 
 	const soapLabels = useSoapLabels();
 	const settings = useSettings();
-	const [layoutNbPerRow /*, setLayoutNbPerRow*/] = React.useState(
-		settings.layoutNbPerRow
-	);
+
+	const [layoutNbPerRow /*, setLayoutNbPerRow*/] = React.useState(settings.layoutNbPerRow);
 	const [layout /*, setLayoutNbPerRow*/] = React.useState(settings.layout);
 
 	// Settings Modal
@@ -74,18 +81,10 @@ const LabelsPrintView = (props) => {
 
 		return rows.map((row, r) => {
 			return (
-				<div
-					className={classes.gridPrintRow}
-					key={`labelPreviewRow-${r}`}
-				>
+				<div className={classes.gridPrintRow} key={`labelPreviewRow-${r}`}>
 					{row.map((label, l) => {
 						const index = r * _layoutNbPerRow + l;
-						return (
-							<Label
-								key={`labelPreview-${index}`}
-								soapLabel={label}
-							/>
-						);
+						return <Label key={`labelPreview-${index}`} soapLabel={label} />;
 					})}
 				</div>
 			);
@@ -107,7 +106,9 @@ const LabelsPrintView = (props) => {
 			Math.max(
 				0,
 				settings.pagePadding.pl -
-					(isColumnLayout
+					(settings.dateLeft
+						? 0
+						: isColumnLayout
 						? settings.padding.pl
 						: settings.padding.pl1)
 			) + "px",
@@ -115,9 +116,7 @@ const LabelsPrintView = (props) => {
 			Math.max(
 				0,
 				settings.pagePadding.pl -
-					(isColumnLayout
-						? settings.padding.pr
-						: settings.padding.pr2)
+					(isColumnLayout ? settings.padding.pr : settings.padding.pr2)
 			) + "px",
 	};
 
@@ -150,11 +149,7 @@ const LabelsPrintView = (props) => {
 			</div>
 			<Grid item className={classes.gridPrintLabels} {...pagePadding}>
 				{soapLabels && soapLabels.length
-					? renderLabels(
-							soapLabels,
-							settings.layoutNbPerRow,
-							settings.layout
-					  )
+					? renderLabels(soapLabels, settings.layoutNbPerRow, settings.layout)
 					: null}
 			</Grid>
 		</React.Fragment>

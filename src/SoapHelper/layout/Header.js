@@ -2,11 +2,7 @@ import { withStyles } from "@material-ui/core/styles";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { IconButton } from "@mui/material";
-import {
-	rightAbsoluteContainer,
-	wrapperForAbsolute,
-	noPrint,
-} from "SoapHelper/styles/styles";
+import { rightAbsoluteContainer, wrapperForAbsolute, noPrint } from "SoapHelper/styles/styles";
 import * as React from "react";
 import { Link, useLocation } from "react-router-dom";
 import Cookies from "universal-cookie";
@@ -88,9 +84,7 @@ const Header = (props) => {
 			<div>
 				<Link
 					className={
-						location.pathname === "/calculator"
-							? classes.currentLlink
-							: classes.link
+						location.pathname === "/calculator" ? classes.currentLlink : classes.link
 					}
 					to="/calculator"
 				>
@@ -99,9 +93,7 @@ const Header = (props) => {
 				|{" "}
 				<Link
 					className={
-						location.pathname === "/labels"
-							? classes.currentLlink
-							: classes.link
+						location.pathname === "/labels" ? classes.currentLlink : classes.link
 					}
 					to="/labels"
 				>

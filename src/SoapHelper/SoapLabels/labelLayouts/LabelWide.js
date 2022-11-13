@@ -12,6 +12,10 @@ const styles = () => ({
 		display: "flex",
 		alignItems: "center",
 		width: "100%",
+		"@media print": {
+			boxShadow: "none",
+			borderWidth: "0 !important",
+		},
 	},
 	labelWideRowGridItemLeft: {
 		display: "inline-block",
@@ -23,7 +27,7 @@ const styles = () => ({
 		width: "100%",
 		paddingLeft: "7px",
 	},
-	labelSoapName: {
+	labelWideRowSoapName: {
 		fontFamily: "Shadows Into Light",
 		fontSize: "32px",
 		lineHeight: "28px",
@@ -32,14 +36,14 @@ const styles = () => ({
 			marginBottom: 0,
 		},
 	},
-	labelSoapIngredients: {
+	labelWideRowSoapIngredients: {
 		fontFamily: "Lato",
 		fontSize: "12px",
 		lineHeight: "16px",
 		margin: "10px 0 10px",
 		fontWeight: "300",
 	},
-	labelSoapBrand: {
+	labelWideRowSoapBrand: {
 		fontFamily: "Shadows Into Light",
 		fontSize: "18px",
 		lineHeight: "18px",
@@ -48,7 +52,7 @@ const styles = () => ({
 			marginBottom: 0,
 		},
 	},
-	labelSoapPhrase: {
+	labelWideRowSoapPhrase: {
 		fontFamily: "Shadows Into Light",
 		fontSize: "14px",
 		lineHeight: "16px",
@@ -57,7 +61,7 @@ const styles = () => ({
 			marginBottom: 0,
 		},
 	},
-	labelSoapDate: {
+	labelWideRowSoapDate: {
 		fontFamily: "Lato",
 		fontSize: "10px",
 		lineHeight: "14px",
@@ -66,8 +70,6 @@ const styles = () => ({
 });
 
 const LabelWide = (props) => {
-	const settings = useSettings();
-
 	const {
 		classes,
 		demo: demoProps,
@@ -77,13 +79,19 @@ const LabelWide = (props) => {
 		demo,
 		dateOptions,
 		soapDate,
+		tmpSettings,
 	} = props;
+
+	const initialSettings = useSettings();
+	const settings = tmpSettings || initialSettings;
 
 	const { pt, pb, pl1, pr1, pl2, pr2 } = settings.padding;
 	const leftColumnWidth = settings.leftColumnWidth;
 	const seperatorWidth = settings.seperatorWidth;
 
-	const styleFont = { fontFamily: settings.font };
+	const styleFont = {
+		fontFamily: settings.font,
+	};
 
 	return (
 		<Grid
@@ -105,9 +113,7 @@ const LabelWide = (props) => {
 					{soapLabel.ingredients}
 				</StyledP>
 				{soapLabel.date && (
-					<StyledP className={classes.labelWideRowSoapDate}>
-						{soapDate}
-					</StyledP>
+					<StyledP className={classes.labelWideRowSoapDate}>{soapDate}</StyledP>
 				)}
 			</Grid>
 			<Grid
@@ -118,21 +124,12 @@ const LabelWide = (props) => {
 				className={classes.labelWideRowGridItemRight}
 				style={{ borderLeft: `${seperatorWidth}px solid #000` }}
 			>
-				{brand && (
-					<StyledP className={classes.labelWideRowSoapBrand}>
-						{brand}
-					</StyledP>
-				)}
-				<StyledP
-					style={styleFont}
-					className={classes.labelWideRowSoapName}
-				>
+				{brand && <StyledP className={classes.labelWideRowSoapBrand}>{brand}</StyledP>}
+				<StyledP style={styleFont} className={classes.labelWideRowSoapName}>
 					{soapLabel.name}
 				</StyledP>
 				{soapLabel.phrase && (
-					<StyledP className={classes.labelWideRowSoapPhrase}>
-						{soapLabel.phrase}
-					</StyledP>
+					<StyledP className={classes.labelWideRowSoapPhrase}>{soapLabel.phrase}</StyledP>
 				)}
 			</Grid>
 		</Grid>

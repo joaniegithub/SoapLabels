@@ -16,19 +16,12 @@ import { Grid } from "@mui/material";
 import { IconButton } from "@mui/material";
 import { Tooltip } from "@mui/material";
 import Label from "SoapHelper/SoapLabels/labelLayouts/Label";
-import {
-	useCurrentSoapLabel,
-	useSettings,
-} from "SoapHelper/SoapLabels/store/actions";
-import {
-	gridItemClose,
-	modalBox,
-	secondTitle,
-	gridForm,
-} from "SoapHelper/styles/styles";
+import { useCurrentSoapLabel, useSettings } from "SoapHelper/SoapLabels/store/actions";
+import { gridItemClose, modalBox, secondTitle, gridForm } from "SoapHelper/styles/styles";
 import * as React from "react";
 
 const translations = {
+	"Sweet Almond Oil, sweet": "Huile d'amande douce",
 	"Almond Oil, sweet": "Huile d'amande douce",
 	"Aloe Butter": "Beurre d'aloès",
 	"Argan Oil": "Huile d'argane",
@@ -36,6 +29,7 @@ const translations = {
 	"Canola Oil": "Huile de canola",
 	"Castor Oil": "Huile de ricin",
 	"Cocoa Butter": "Beurre de cacao",
+	"Coconut Oil": "Huile de coconut",
 	"Coconut Oil, 76 deg": "Huile de coconut",
 	"Coconut Oil, 92 deg": "Huile de coconut",
 	"Coconut Oil, fractionated": "Huile de coconut",
@@ -51,6 +45,8 @@ const translations = {
 	"Sesame Oil": "Huile de sésame",
 	"Shea Butter": "Beurre de karité",
 	"Sunflower Oil": "Huile de tournesol",
+	Water: "Eau",
+	Lye: "Hydroxide de sodium",
 };
 
 const styles = () => ({
@@ -107,17 +103,12 @@ const LabelModal = (props) => {
 
 	const [soapRecipeError, setSoapRecipeError] = React.useState(false);
 
-	const [ingredientsCodeOutput, setIngredientsCodeOutput] =
-		React.useState("");
+	const [ingredientsCodeOutput, setIngredientsCodeOutput] = React.useState("");
 
 	const handleUseThinSpaceChange = (event) => {
 		const _useThinSpace = !!event.target.checked;
 		setUseThinSpace(_useThinSpace);
-		setSoapName(
-			_useThinSpace
-				? soapName.replaceAll(" ", " ")
-				: soapName.replaceAll(" ", " ")
-		);
+		setSoapName(_useThinSpace ? soapName.replaceAll(" ", " ") : soapName.replaceAll(" ", " "));
 	};
 	const handleUseSoapCalcRecipeChange = (event) => {
 		setUseSoapCalcRecipe(!!event.target.checked);
@@ -127,11 +118,7 @@ const LabelModal = (props) => {
 	};
 	const handleSoapNameChange = (event) => {
 		const _soapName = event.target.value;
-		setSoapName(
-			useThinSpace
-				? _soapName.replaceAll(" ", " ")
-				: _soapName.replaceAll(" ", " ")
-		);
+		setSoapName(useThinSpace ? _soapName.replaceAll(" ", " ") : _soapName.replaceAll(" ", " "));
 	};
 	// const handleSoapDateChange = (event) => {
 	// 	const _soapDate = event.target.value;
@@ -185,20 +172,14 @@ const LabelModal = (props) => {
 			}
 			const soapCodeData = {};
 
-			const rxMatchWater = soapCode.match(
-				/^Water [0-9.]+ [0-9.]+ ([0-9.]+$)/m
-			);
+			const rxMatchWater = soapCode.match(/^Water [0-9.]+ [0-9.]+ ([0-9.]+$)/m);
 			if (rxMatchWater && rxMatchWater.length > 1 && rxMatchWater[1]) {
-				soapCodeData[translateFrench ? "Eau" : "Water"] =
-					rxMatchWater[1];
+				soapCodeData[translateFrench ? "Eau" : "Water"] = rxMatchWater[1];
 			}
 
-			const rxMatchLye = soapCode.match(
-				/^Lye - NaOH [0-9.]+ [0-9.]+ ([0-9.]+$)/m
-			);
+			const rxMatchLye = soapCode.match(/^Lye - NaOH [0-9.]+ [0-9.]+ ([0-9.]+$)/m);
 			if (rxMatchLye && rxMatchLye.length > 1 && rxMatchLye[1]) {
-				soapCodeData[translateFrench ? "Hydroxyde de sodium" : "Lye"] =
-					rxMatchLye[1];
+				soapCodeData[translateFrench ? "Hydroxyde de sodium" : "Lye"] = rxMatchLye[1];
 			}
 
 			// 1 Coconut Oil, 76 deg 30.00 0.595 9.52 270.00
@@ -208,9 +189,7 @@ const LabelModal = (props) => {
 				),
 			];
 			arrOils.forEach((oilElem) => {
-				soapCodeData[
-					translateFrench ? translations[oilElem[1]] : oilElem[1]
-				] = oilElem[2];
+				soapCodeData[translateFrench ? translations[oilElem[1]] : oilElem[1]] = oilElem[2];
 			});
 
 			const sortableRecipeData = [];
@@ -227,13 +206,16 @@ const LabelModal = (props) => {
 				.toLowerCase();
 		} else {
 			allIngredients = soapIngredients;
+			if (translateFrench) {
+				Object.keys(translations).forEach((k) => {
+					allIngredients = allIngredients.replace(new RegExp(k, "ig"), translations[k]);
+				});
+			}
 		}
 
 		setSoapIngredients(allIngredients);
 
-		const ingredientsLabel = translateFrench
-			? "Ingrédients"
-			: "Ingredients";
+		const ingredientsLabel = translateFrench ? "Ingrédients" : "Ingredients";
 		allIngredients = `${ingredientsLabel}: ${allIngredients}, ${
 			soapFragrances || "fragrance(s)"
 		}, ${soapColorants || "colorant(s)"}.`;
@@ -254,25 +236,16 @@ const LabelModal = (props) => {
 	]);
 
 	React.useEffect(() => {
-		if (
-			currentSoapLabel &&
-			currentSoapLabel.name &&
-			currentSoapLabel.ingredients
-		) {
+		if (currentSoapLabel && currentSoapLabel.name && currentSoapLabel.ingredients) {
 			setSoapName(currentSoapLabel.name);
 			setSoapDate(new Date(currentSoapLabel.date));
 			setSoapPhrase(currentSoapLabel.phrase);
 			setSoapCode(currentSoapLabel.soapCode);
-			setSoapIngredients(
-				currentSoapLabel.soapIngredients || currentSoapLabel.ingredients
-			);
+			setSoapIngredients(currentSoapLabel.soapIngredients || currentSoapLabel.ingredients);
 			setSoapFragrances(currentSoapLabel.soapFragrances);
 			setSoapColorants(currentSoapLabel.soapColorants);
 			setTranslateFrench(currentSoapLabel.translateFrench);
-			setUseSoapCalcRecipe(
-				currentSoapLabel.useSoapCalcRecipe &&
-					!!currentSoapLabel.soapCode
-			);
+			setUseSoapCalcRecipe(currentSoapLabel.useSoapCalcRecipe && !!currentSoapLabel.soapCode);
 		} else {
 			setSoapName("");
 			setSoapDate(new Date());
@@ -294,26 +267,10 @@ const LabelModal = (props) => {
 	const pagePadding = {
 		pt: Math.max(0, 20 - settings.padding.pt) + "px",
 		pb: Math.max(0, 20 - settings.padding.pb) + "px",
-		pl:
-			Math.max(
-				0,
-				20 -
-					(isColumnLayout
-						? settings.padding.pl
-						: settings.padding.pl1)
-			) + "px",
-		pr:
-			Math.max(
-				0,
-				20 -
-					(isColumnLayout
-						? settings.padding.pr
-						: settings.padding.pr2)
-			) + "px",
+		pl: Math.max(0, 20 - (isColumnLayout ? settings.padding.pl : settings.padding.pl1)) + "px",
+		pr: Math.max(0, 20 - (isColumnLayout ? settings.padding.pr : settings.padding.pr2)) + "px",
 	};
-	const arrPerRow = [
-		...Array(isColumnLayout ? settings.layoutNbPerRow : 1).keys(),
-	];
+	const arrPerRow = [...Array(isColumnLayout ? settings.layoutNbPerRow : 1).keys()];
 
 	const tooltipSoapCode = `You can copy and paste the soapcalc.net generated recipe, 
 		and this if checked, all ingredients will be extracted${
@@ -325,15 +282,9 @@ const LabelModal = (props) => {
 			<DialogContent dividers={false}>
 				<Box className={classes.modalBox}>
 					<FormControl fullWidth={true} component="form">
-						<Grid
-							container
-							spacing={2}
-							className={classes.gridForm}
-						>
+						<Grid container spacing={2} className={classes.gridForm}>
 							<Grid item xs={6}>
-								<h2 className={classes.secondTitle}>
-									New Soap Label
-								</h2>
+								<h2 className={classes.secondTitle}>New Soap Label</h2>
 							</Grid>
 							<Grid item xs={6} className={classes.gridItemClose}>
 								<IconButton onClick={handleClose}>
@@ -429,17 +380,12 @@ const LabelModal = (props) => {
 									control={
 										<Checkbox
 											checked={useSoapCalcRecipe}
-											onChange={
-												handleUseSoapCalcRecipeChange
-											}
+											onChange={handleUseSoapCalcRecipeChange}
 										/>
 									}
 									label="Extract ingredients from soapcalc.net recipe"
 								/>
-								<Tooltip
-									title={tooltipSoapCode}
-									placement="right"
-								>
+								<Tooltip title={tooltipSoapCode} placement="right">
 									<IconButton size="small">
 										<InfoIcon />
 									</IconButton>
@@ -447,13 +393,10 @@ const LabelModal = (props) => {
 							</Grid>
 							<Grid item xs={6}>
 								<FormControlLabel
-									disabled={!useSoapCalcRecipe}
 									control={
 										<Checkbox
 											checked={translateFrench}
-											onChange={
-												handleTranslateFrenchChange
-											}
+											onChange={handleTranslateFrenchChange}
 										/>
 									}
 									label="Translate ingredients in french."
@@ -479,11 +422,7 @@ const LabelModal = (props) => {
 									style={{ width: "100%" }}
 								/>
 							</Grid>
-							<Grid
-								item
-								xs={12}
-								className={classes.gridItemButtons}
-							>
+							<Grid item xs={12} className={classes.gridItemButtons}>
 								<Button
 									className={classes.buttons}
 									size="small"
@@ -509,10 +448,10 @@ const LabelModal = (props) => {
 							<Label
 								key={`label-${i}`}
 								soapLabel={{
-									soapName,
+									name: soapName,
 									ingredients: ingredientsCodeOutput,
 									soapPhrase,
-									soapDate,
+									date: soapDate,
 								}}
 							/>
 						))}

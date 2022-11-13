@@ -70,6 +70,9 @@ div#root {
 div.main {
 	min-height: 100%;
 }
+div.print {
+	display: none;
+}
 
 code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
@@ -85,31 +88,13 @@ code {
 		height: auto;
 	}
 	div.main {
-		background-image: none !important;
+		display: none;
 	}
-	div.container,
-	div.box {
+	div.print {
+		display: block;
 		padding: 0 !important;
-		box-shadow: none;
 		width: 790px !important;
-	}
-	/* .noPrint {
-		display: none !important;
-	} */
-	div.gridPrintLabels,
-	div.labelGridItem,
-	div.labelWideRowGridItem {
-		box-shadow: none;
-		border-width: 0 !important;
-	}
-	div.labelGridItem {
-		border-width: 0 !important;
-		vertical-align: top;
-		width: 100%;
-	}
-	div.gridPrintRow {
-		page-break-inside: avoid;
-		break-inside: avoid;
+		margin: 0 auto;
 	}
 }
 
